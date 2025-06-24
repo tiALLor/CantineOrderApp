@@ -1,0 +1,13 @@
+{
+  "name": "mono",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "dependencies": {
+    "npm-check-updates": "^18.0.1"
+  }
+}
