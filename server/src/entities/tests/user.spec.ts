@@ -7,8 +7,7 @@ import {
 } from '../user'
 import { fakeUser } from './fakes'
 
-
-describe('userSchema - schema parse valid value', () => {
+describe('userSchema - schema parse', () => {
   it('should validate user correctly', async () => {
     const record = fakeUser({
       id: 123,

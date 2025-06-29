@@ -6,8 +6,5 @@
   "workspaces": [
     "client",
     "server"
-  ],
-  "dependencies": {
-    "npm-check-updates": "^18.0.1"
-  }
+  ]
 }

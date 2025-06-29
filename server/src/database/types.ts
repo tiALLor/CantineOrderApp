@@ -10,7 +10,7 @@ export type Numeric = ColumnType<string, number | string, number | string>
 export interface Meal {
   id: Generated<number>
   name: string
-  price: Numeric
+  priceEur: Numeric
   type: string
 }
 
