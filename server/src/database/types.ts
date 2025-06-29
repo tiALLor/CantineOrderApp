@@ -5,6 +5,15 @@ export type Generated<T> =
     ? ColumnType<S, I | undefined, U>
     : ColumnType<T, T | undefined, T>
 
+export type Numeric = ColumnType<string, number | string, number | string>
+
+export interface Meal {
+  id: Generated<number>
+  name: string
+  price: Numeric
+  type: string
+}
+
 export interface Role {
   id: Generated<number>
   name: string
@@ -19,6 +28,7 @@ export interface User {
 }
 
 export interface DB {
+  meal: Meal
   role: Role
   user: User
 }
