@@ -16,30 +16,23 @@ function getUserFromToken(token: string) {
     const tokenParsed = parseTokenPayload(tokenVerified)
 
     return tokenParsed.user
-  } catch (error) {
+  } catch {
     return null
   }
 }
 
 export const authenticatedProcedure = publicProcedure.use(({ ctx, next }) => {
   if (ctx.authUser) {
-    // If we have an authenticated user, we can proceed.
     return next({
       ctx: {
-        // This is a bit of a type hack.
-        // At this point ctx.authUser is AuthUser (no longer undefined).
-        // If we make sure that this middleware always returns
-        // ctx with authUser not undefined, then all routes using this
-        // middleware will also know that authUser is defined.
         authUser: ctx.authUser,
       },
     })
   }
-
   // we depend on having an Express request object
   if (!ctx.req) {
     const message =
-      (config.env === 'development' || config.env === 'test')
+      config.env === 'development' || config.env === 'test'
         ? 'Missing Express request object. If you are running tests, make sure to provide some req object in the procedure context.'
         : 'Missing Express request object.'
 
@@ -71,6 +64,7 @@ export const authenticatedProcedure = publicProcedure.use(({ ctx, next }) => {
 
   return next({
     ctx: {
+      ...ctx,
       authUser,
     },
   })

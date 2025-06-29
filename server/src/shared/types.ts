@@ -2,8 +2,8 @@
 // Types are stripped out by the compiler, so this is safe.
 export type * from '../database/types'
 
-// TODO: replace imports and remove comments 
+// TODO: replace imports and remove comments
 
 // export type * from '../entities/article'
 // export type * from '../entities/comment'
-// export type * from '../entities/user'
+export type * from '../entities/user'
