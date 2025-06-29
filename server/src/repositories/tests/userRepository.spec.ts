@@ -160,15 +160,9 @@ describe('deleteUserByEmail', () => {
 
 describe('deleteUserById', () => {
   it('should delete a user base on id', async () => {
-    const [userToBeDeleted] = await insertAll(
-      db,
-      'user',
-      fakeUser({
-        id: 123,
-      })
-    )
+    const [userToBeDeleted] = await insertAll(db, 'user', fakeUser())
 
-    const result = await repository.deleteUserById(123)
+    const result = await repository.deleteUserById(userToBeDeleted.id)
 
     expect(result).toEqual({
       id: userToBeDeleted.id,

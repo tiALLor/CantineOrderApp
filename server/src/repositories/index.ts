@@ -3,11 +3,12 @@ import type { Database } from '@server/database'
 // TODO: update the links to repository handlers
 import { roleRepository } from './roleRepository'
 import { userRepository } from './userRepository'
+import { mealRepository } from './mealRepository'
 
 export type RepositoryFactory = <T>(db: Database) => T
 
 // index of all repositories for provideRepos
-const repositories = { roleRepository, userRepository }
+const repositories = { roleRepository, userRepository, mealRepository }
 
 export type RepositoriesFactories = typeof repositories
 export type Repositories = {

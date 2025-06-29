@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type { Selectable } from 'kysely'
+import type { Selectable, Updateable } from 'kysely'
 import type { Meal } from '../database/types'
 import { idSchema } from './shared'
 
@@ -15,14 +15,21 @@ export const mealSchema = z.object({
   type: z.enum(MEAL_TYPES),
 })
 
-export const mealAllKeys = Object.keys(mealSchema.shape) as (keyof Meal)[]
+export const mealKeyAll = Object.keys(mealSchema.shape) as (keyof Meal)[]
 
-export const mealInsertable = mealSchema.pick({
+export const mealInsertableSchema = mealSchema.pick({
   name: true,
   priceEur: true,
   type: true,
 })
 
-export const mealKeysPublic = mealAllKeys
+export const mealKeyPublic = mealKeyAll
 
-export type MealPublic = Pick<Selectable<Meal>, (typeof mealKeysPublic)[number]>
+export type MealPublic = Pick<Selectable<Meal>, (typeof mealKeyPublic)[number]>
+
+export const mealUpdateable = mealInsertableSchema.partial()
+
+export type MealUpdateable = Pick<
+  Updateable<Meal>,
+  (typeof mealKeyPublic)[number]
+>
