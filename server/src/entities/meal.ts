@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import type { Selectable, Updateable } from 'kysely'
-import type { Meal } from '../database/types'
+import type { Meal } from '@server/database/types'
 import { idSchema } from './shared'
 
 const MEAL_TYPES = ['soup', 'main'] as const
@@ -27,13 +27,13 @@ export const mealInsertableSchema = mealSchema.pick({
   type: true,
 })
 
-export const mealKeyPublic = mealKeyAll
-
 export type MealInsertable = z.infer<typeof mealInsertableSchema>
+
+export const mealKeyPublic = mealKeyAll
 
 export type MealPublic = Pick<Selectable<Meal>, (typeof mealKeyPublic)[number]>
 
-export const mealUpdateable = mealInsertableSchema.partial()
+export const mealUpdateableSchema = mealInsertableSchema.partial()
 
 export type MealUpdateable = Pick<
   Updateable<Meal>,

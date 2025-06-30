@@ -1,9 +1,8 @@
 import { mealInsertableSchema, mealSchema } from '../meal'
-
 import { fakeMeal } from './fakes'
 
 describe('mealSchema - schema parse', () => {
-  it('should validate the schema correctly', async () => {
+  it('should parse the schema correctly', async () => {
     const record = fakeMeal({ id: 123, priceEur: 12.2 })
 
     const meal = mealSchema.parse(record)
@@ -15,7 +14,7 @@ describe('mealSchema - schema parse', () => {
     })
   })
 
-  it('should validate the schema correctly with priceEur as str', async () => {
+  it('should parse the schema correctly with priceEur as str', async () => {
     const record = fakeMeal({ id: 123, priceEur: '12.2' })
 
     const meal = mealSchema.parse(record)

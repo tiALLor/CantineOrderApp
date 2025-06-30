@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import type { Insertable, Selectable } from 'kysely'
-import type { User } from '../database/types'
+import type { User } from '@server/database/types'
 import { ROLES } from './role'
 import { idSchema } from './shared'
 

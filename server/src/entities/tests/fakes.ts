@@ -1,4 +1,4 @@
-import type { User, Meal } from '@server/database/types'
+import type { User, Meal, Menu } from '@server/database/types'
 import type { Insertable } from 'kysely'
 import { random } from '@tests/utils/random'
 import type { AuthUserWithRoleName } from '../user'
@@ -36,5 +36,13 @@ export const fakeMeal = <T extends Partial<Insertable<Meal>>>(
   name: random.sentence({ words: 10 }),
   priceEur: random.floating({ min: 0.1, max: 100, fixed: 2 }).toString(),
   type: 'soup',
+  ...overrides,
+})
+
+export const fakeMenu = <T extends Partial<Insertable<Menu>>>(
+  overrides: T = {} as T
+): Insertable<Menu> => ({
+  date: random.date(),
+  mealId: 2,
   ...overrides,
 })

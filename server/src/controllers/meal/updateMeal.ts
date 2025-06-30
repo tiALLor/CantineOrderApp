@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { mealRepository } from '@server/repositories/mealRepository'
 import { chefAuthProcedure } from '@server/trpc/chefAuthProcedure'
 import provideRepos from '@server/trpc/provideRepos'
-import { mealUpdateable, type MealPublic } from '@server/entities/meal'
+import { mealUpdateableSchema, type MealPublic } from '@server/entities/meal'
 import { TRPCError } from '@trpc/server'
 import { idSchema } from '@server/entities/shared'
 
@@ -11,7 +11,7 @@ export default chefAuthProcedure
   .input(
     z.object({
       id: idSchema,
-      mealData: mealUpdateable,
+      mealData: mealUpdateableSchema,
     })
   )
   .mutation(
