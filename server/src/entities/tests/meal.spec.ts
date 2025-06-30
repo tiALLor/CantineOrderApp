@@ -1,4 +1,4 @@
-import { mealInsertable, mealSchema } from '../meal'
+import { mealInsertableSchema, mealSchema } from '../meal'
 
 import { fakeMeal } from './fakes'
 
@@ -55,7 +55,7 @@ describe('mealInsertable - schema parse', () => {
   it('should validate the schema correctly without id', async () => {
     const record = fakeMeal()
 
-    const meal = mealInsertable.parse(record)
+    const meal = mealInsertableSchema.parse(record)
 
     expect(meal).toEqual(record)
   })

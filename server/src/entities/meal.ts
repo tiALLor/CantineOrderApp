@@ -5,6 +5,10 @@ import { idSchema } from './shared'
 
 const MEAL_TYPES = ['soup', 'main'] as const
 
+export const mealTypeSchema = z.enum(MEAL_TYPES)
+
+export type MealType = z.infer<typeof mealTypeSchema>
+
 export const mealSchema = z.object({
   id: idSchema,
   name: z.string().trim().min(1).max(100),
@@ -24,6 +28,8 @@ export const mealInsertableSchema = mealSchema.pick({
 })
 
 export const mealKeyPublic = mealKeyAll
+
+export type MealInsertable = z.infer<typeof mealInsertableSchema>
 
 export type MealPublic = Pick<Selectable<Meal>, (typeof mealKeyPublic)[number]>
 

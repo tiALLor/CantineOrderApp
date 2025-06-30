@@ -81,20 +81,7 @@ describe('updateMeal', () => {
     expect(mealInDatabase.name).toEqual('new name')
   })
 
-  it('should update meal', async () => {
-    const record = {}
-
-    const newMeal = await repository.updateMeal(mealTwo.id, record)
-
-    expect(newMeal).toEqual({ ...mealTwo })
-
-    const [mealInDatabase] = await selectAll(db, 'meal', (eb) =>
-      eb('id', '=', mealTwo.id)
-    )
-    expect(mealInDatabase).toEqual(mealTwo)
-  })
-
-  it('should update meal', async () => {
+  it('should update meal with 2 parameters', async () => {
     const record = { name: 'better name', priceEur: '9.99' }
 
     const newMeal = await repository.updateMeal(mealTwo.id, record)
@@ -106,6 +93,19 @@ describe('updateMeal', () => {
     )
     expect(mealInDatabase.name).toEqual('better name')
     expect(mealInDatabase.priceEur).toEqual('9.99')
+  })
+
+  it('should return original meal if not changes are provided', async () => {
+    const record = {}
+
+    const newMeal = await repository.updateMeal(mealTwo.id, record)
+
+    expect(newMeal).toEqual({ ...mealTwo })
+
+    const [mealInDatabase] = await selectAll(db, 'meal', (eb) =>
+      eb('id', '=', mealTwo.id)
+    )
+    expect(mealInDatabase).toEqual(mealTwo)
   })
 
   it('should return undefined if no meal with id', async () => {

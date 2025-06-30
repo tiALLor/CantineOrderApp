@@ -1,4 +1,4 @@
-import { userSchemaWithRoleName } from '@server/entities/user'
+import { userSchemaWithRoleName, type UserPublic } from '@server/entities/user'
 import { userRepository } from '@server/repositories/userRepository'
 import { roleRepository } from '@server/repositories/roleRepository'
 import { adminAuthProcedure } from '@server/trpc/adminAuthProcedure'
@@ -17,7 +17,7 @@ export default adminAuthProcedure
       roleName: true,
     })
   )
-  .mutation(async ({ input: user, ctx: { repos } }) => {
+  .mutation(async ({ input: user, ctx: { repos } }): Promise<UserPublic> => {
     const passwordHash = await getPasswordHash(user.password)
 
     const roleId = await repos.roleRepository.getRoleIdByName(user.roleName)

@@ -31,7 +31,7 @@ it('should create a user with role chef', async () => {
     eb('email', '=', userData.email)
   )
 
-  expect(userInDatabase).toMatchObject({
+  expect(userInDatabase).toEqual({
     id: expect.any(Number),
     ...userData,
     password: expect.not.stringContaining(userData.password),
