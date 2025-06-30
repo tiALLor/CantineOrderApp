@@ -33,7 +33,7 @@ export async function up(db: Kysely<any>) {
     .addColumn('email', 'text', (col) => col.notNull().unique())
     .addColumn('password', 'text', (col) => col.notNull())
     .addColumn('roleId', 'integer', (col) =>
-      col.notNull().references('role.id')
+      col.notNull().references('role.id').onDelete('restrict')
     )
     .execute()
 

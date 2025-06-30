@@ -7,11 +7,19 @@ export type Generated<T> =
 
 export type Numeric = ColumnType<string, number | string, number | string>
 
+export type Timestamp = ColumnType<Date, Date | string, Date | string>
+
 export interface Meal {
   id: Generated<number>
   name: string
   priceEur: Numeric
   type: string
+}
+
+export interface Menu {
+  date: Timestamp
+  id: Generated<number>
+  mealId: number
 }
 
 export interface Role {
@@ -29,6 +37,7 @@ export interface User {
 
 export interface DB {
   meal: Meal
+  menu: Menu
   role: Role
   user: User
 }
