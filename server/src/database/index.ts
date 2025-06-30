@@ -7,6 +7,8 @@ import {
 import pg from 'pg'
 import type { DB } from './types'
 
+pg.types.setTypeParser(1082, (val) => val)
+
 export function createDatabase(options: pg.PoolConfig): Kysely<DB> {
   return new Kysely<DB>({
     dialect: new PostgresDialect({

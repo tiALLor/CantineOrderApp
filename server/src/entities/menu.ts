@@ -1,12 +1,12 @@
 import { z } from 'zod'
 import type { Insertable, Selectable, Updateable } from 'kysely'
 import type { Menu } from '@server/database/types'
-import { idSchema } from './shared'
-import { mealTypeSchema } from './meal'
+import { idSchema, dateSchema } from './shared'
+import { mealSchema, mealTypeSchema } from './meal'
 
 export const menuSchema = z.object({
   id: idSchema,
-  date: z.coerce.date(),
+  date: dateSchema,
   mealId: idSchema,
 })
 
@@ -36,3 +36,11 @@ export const menuGetSchemaTypeDates = z.object({
   type: mealTypeSchema,
   dates: z.array(z.coerce.date()),
 })
+
+export type MenuGetSchemaTypeDates = z.infer<typeof menuGetSchemaTypeDates>
+
+export const menuWithMealSchema = menuSchema.merge(
+  mealSchema.omit({ id: true })
+)
+
+export type MenuWithMealSchema = z.infer<typeof menuWithMealSchema>
