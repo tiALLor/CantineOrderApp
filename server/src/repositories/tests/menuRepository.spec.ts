@@ -98,12 +98,12 @@ describe('menuMealExists', () => {
 
 describe('get menu by days and type', () => {
   it('should get menu by days and type', async () => {
-    const result = await repository.getMenuByTypeByDate({
+    const menu = await repository.getMenuByTypeByDate({
       type: 'main',
       dates: [new Date('2025-03-23'), new Date('2025-03-24')],
     })
 
-    expect(result).toEqual(
+    expect(menu).toEqual(
       expect.arrayContaining([
         {
           ...fakeMenu({

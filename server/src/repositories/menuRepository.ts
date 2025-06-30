@@ -4,7 +4,7 @@ import {
   menuKeyPublic,
   type MenuGetSchemaTypeDates,
   type MenuPublic,
-  type MenuWithMealSchema,
+  type MenuWithMeal,
 } from '@server/entities/menu'
 import { prefixTable } from '@server/utils/strings'
 import type { Insertable } from 'kysely'
@@ -19,7 +19,7 @@ export function menuRepository(db: Database) {
         .executeTakeFirstOrThrow()
     },
 
-    async getMenuByDate(date: Date): Promise<MenuWithMealSchema[]> {
+    async getMenuByDate(date: Date): Promise<MenuWithMeal[]> {
       const menus = await db
         .selectFrom('menu')
         .innerJoin('meal', 'menu.mealId', 'meal.id')
@@ -32,7 +32,7 @@ export function menuRepository(db: Database) {
         ])
         .execute()
 
-      return menus as MenuWithMealSchema[]
+      return menus as MenuWithMeal[]
     },
 
     async menuMealExists({
@@ -54,7 +54,7 @@ export function menuRepository(db: Database) {
 
     async getMenuByTypeByDate(
       record: MenuGetSchemaTypeDates
-    ): Promise<MenuWithMealSchema[]> {
+    ): Promise<MenuWithMeal[]> {
       const menus = await db
         .selectFrom('menu')
         .innerJoin('meal', 'menu.mealId', 'meal.id')
@@ -70,7 +70,7 @@ export function menuRepository(db: Database) {
 
       if (!menus) return []
 
-      return menus as MenuWithMealSchema[]
+      return menus as MenuWithMeal[]
     },
 
     async deleteMenuMealById(id: number): Promise<MenuPublic | undefined> {

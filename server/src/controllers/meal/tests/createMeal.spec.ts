@@ -34,6 +34,11 @@ it('should create a meal', async () => {
 
   const meal = await createMeal(mealData)
 
+  expect(meal).toEqual({
+    ...mealData,
+    id: expect.any(Number),
+  })
+
   const [mealInDatabase] = await selectAll(db, 'meal', (eb) =>
     eb('id', '=', meal.id)
   )

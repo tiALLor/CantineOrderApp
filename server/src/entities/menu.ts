@@ -43,4 +43,6 @@ export const menuWithMealSchema = menuSchema.merge(
   mealSchema.omit({ id: true })
 )
 
-export type MenuWithMealSchema = z.infer<typeof menuWithMealSchema>
+export type MenuWithMeal = z.infer<typeof menuWithMealSchema>
+
+export type GroupedMenus = Record<string, MenuWithMeal[]>
