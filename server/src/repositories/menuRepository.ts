@@ -2,7 +2,7 @@ import type { Database, Menu } from '@server/database'
 import {
   menuKeyAll,
   menuKeyPublic,
-  type MenuGetSchemaTypeDates,
+  type MenuSchemaGetByTypeDates,
   type MenuPublic,
   type MenuWithMeal,
 } from '@server/entities/menu'
@@ -53,7 +53,7 @@ export function menuRepository(db: Database) {
     },
 
     async getMenuByTypeByDate(
-      record: MenuGetSchemaTypeDates
+      record: MenuSchemaGetByTypeDates
     ): Promise<MenuWithMeal[]> {
       const menus = await db
         .selectFrom('menu')

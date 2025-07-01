@@ -25,8 +25,8 @@ export interface Menu {
 export interface Order {
   date: Timestamp
   id: Generated<number>
-  mainMealId: number
-  soupMealId: number
+  mainMealId: number | null
+  soupMealId: number | null
   userId: number
 }
 

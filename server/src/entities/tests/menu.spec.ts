@@ -1,7 +1,7 @@
 import {
   menuInsertableSchema,
   menuSchema,
-  menuGetSchemaTypeDates,
+  menuSchemaGetByTypeDates,
 } from '../menu'
 import { fakeMenu } from './fakes'
 
@@ -23,7 +23,7 @@ describe('menuSchema - schema parse', () => {
   })
 
   it('should throw a error by invalid date ', async () => {
-    const record = fakeMenu({ id: 122, date: 'jhfgaj' })
+    const record = fakeMenu({ id: 122, date: 'invalid' })
 
     expect(() => menuSchema.parse(record)).toThrow(/date/i)
   })
@@ -42,7 +42,7 @@ describe('menuSchema - schema parse', () => {
   })
 
   it('should throw a error if mealId is empty ', async () => {
-    // @ts-expect-errorTS-expect-error
+    // @ts-expect-error
     const record = fakeMenu({ id: 122, mealId: '' })
 
     expect(() => menuSchema.parse(record)).toThrow(/mealId/i)
@@ -59,14 +59,14 @@ describe('menuInsertable - schema parse', () => {
   })
 })
 
-describe('menuGetSchemaTypeDates - schema parse', () => {
+describe('menuSchemaGetByTypeDates - schema parse', () => {
   it('should validate the schema correctly', async () => {
     const record = {
       type: 'main',
       dates: ['2025-01-22', new Date('2025-01-05')],
     }
 
-    const dateTypeDate = menuGetSchemaTypeDates.parse(record)
+    const dateTypeDate = menuSchemaGetByTypeDates.parse(record)
 
     expect(dateTypeDate).toEqual({
       type: 'main',
@@ -79,9 +79,9 @@ describe('menuGetSchemaTypeDates - schema parse', () => {
       type: 'main',
       dates: [],
     }
-    const dateTypeDate = menuGetSchemaTypeDates.parse(record)
+    const strTypeDate = menuSchemaGetByTypeDates.parse(record)
 
-    expect(dateTypeDate).toEqual({
+    expect(strTypeDate).toEqual({
       type: 'main',
       dates: [],
     })
@@ -92,7 +92,7 @@ describe('menuGetSchemaTypeDates - schema parse', () => {
       type: 'main',
       dates: '',
     }
-    expect(() => menuGetSchemaTypeDates.parse(record)).toThrow(/dates/i)
+    expect(() => menuSchemaGetByTypeDates.parse(record)).toThrow(/dates/i)
   })
 
   it('should throw a error if the date is invalid', async () => {
@@ -101,7 +101,9 @@ describe('menuGetSchemaTypeDates - schema parse', () => {
       dates: ['2025-01-35', new Date('2025-01-05')],
     }
 
-    expect(() => menuGetSchemaTypeDates.parse(record)).toThrow(/Invalid date/i)
+    expect(() => menuSchemaGetByTypeDates.parse(record)).toThrow(
+      /Invalid date/i
+    )
   })
 
   it('should throw a error if the type is invalid', async () => {
@@ -110,6 +112,6 @@ describe('menuGetSchemaTypeDates - schema parse', () => {
       dates: ['2025-01-03', new Date('2025-01-05')],
     }
 
-    expect(() => menuGetSchemaTypeDates.parse(record)).toThrow(/type/i)
+    expect(() => menuSchemaGetByTypeDates.parse(record)).toThrow(/type/i)
   })
 })

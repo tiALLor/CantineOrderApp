@@ -12,10 +12,10 @@ export async function up(db: Kysely<any>) {
       col.notNull().references('user.id').onDelete('restrict')
     )
     .addColumn('soupMealId', 'integer', (col) =>
-      col.notNull().references('meal.id').onDelete('restrict')
+      col.references('menu.id').onDelete('restrict')
     )
     .addColumn('mainMealId', 'integer', (col) =>
-      col.notNull().references('meal.id').onDelete('restrict')
+      col.references('menu.id').onDelete('restrict')
     )
     .addUniqueConstraint('order_date_user_unique', ['date', 'userId'])
     .execute()

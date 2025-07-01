@@ -30,15 +30,16 @@ export type MenuUpdateable = Pick<
   (typeof menuKeyPublic)[number]
 >
 
-// special cases
+// special cases get by type and dates as []
 
-export const menuGetSchemaTypeDates = z.object({
+export const menuSchemaGetByTypeDates = z.object({
   type: mealTypeSchema,
   dates: z.array(z.coerce.date()),
 })
 
-export type MenuGetSchemaTypeDates = z.infer<typeof menuGetSchemaTypeDates>
+export type MenuSchemaGetByTypeDates = z.infer<typeof menuSchemaGetByTypeDates>
 
+// special case returning menu with meal details
 export const menuWithMealSchema = menuSchema.merge(
   mealSchema.omit({ id: true })
 )
@@ -46,3 +47,5 @@ export const menuWithMealSchema = menuSchema.merge(
 export type MenuWithMeal = z.infer<typeof menuWithMealSchema>
 
 export type GroupedMenus = Record<string, MenuWithMeal[]>
+
+// 

@@ -2,13 +2,13 @@ import { menuRepository } from '@server/repositories/menuRepository'
 import { publicProcedure } from '@server/trpc/index'
 import provideRepos from '@server/trpc/provideRepos'
 import {
-  menuGetSchemaTypeDates,
+  menuSchemaGetByTypeDates,
   type GroupedMenus,
 } from '@server/entities/menu'
 
 export default publicProcedure
   .use(provideRepos({ menuRepository }))
-  .input(menuGetSchemaTypeDates)
+  .input(menuSchemaGetByTypeDates)
   .query(async ({ input: menuData, ctx: { repos } }): Promise<GroupedMenus> => {
     const menus = await repos.menuRepository.getMenuByTypeByDate(menuData)
 
