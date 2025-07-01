@@ -1,4 +1,4 @@
-import type { User, Meal, Menu } from '@server/database/types'
+import type { User, Meal, Menu, Order } from '@server/database/types'
 import type { Insertable } from 'kysely'
 import { random } from '@tests/utils/random'
 import type { AuthUserWithRoleName } from '../user'
@@ -44,5 +44,15 @@ export const fakeMenu = <T extends Partial<Insertable<Menu>>>(
 ): Insertable<Menu> => ({
   date: random.date(),
   mealId: 2,
+  ...overrides,
+})
+
+export const fakeOrder = <T extends Partial<Insertable<Order>>>(
+  overrides: T = {} as T
+): Insertable<Order> => ({
+  date: random.date(),
+  userId: 1,
+  soupMealId: 1,
+  mainMealId: 2,
   ...overrides,
 })

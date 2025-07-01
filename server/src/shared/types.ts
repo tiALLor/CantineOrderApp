@@ -4,6 +4,7 @@ export type * from '../database/types'
 
 // TODO: replace imports and remove comments
 
-// export type * from '../entities/article'
-// export type * from '../entities/comment'
 export type * from '../entities/user'
+export type * from '../entities/meal'
+export type * from '../entities/menu'
+export type * from '../entities/order'

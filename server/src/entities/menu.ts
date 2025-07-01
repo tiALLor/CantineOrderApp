@@ -17,7 +17,7 @@ export const menuInsertableSchema = menuSchema.pick({
   mealId: true,
 })
 
-export type MealInsertable = Insertable<Menu>
+export type MenuInsertable = Insertable<Menu>
 
 export const menuKeyPublic = menuKeyAll
 
