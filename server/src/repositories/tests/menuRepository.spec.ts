@@ -22,12 +22,6 @@ const [menuOne] = await insertAll(db, 'menu', [
   fakeMenu({ date: '2025-03-24', mealId: mealFour.id }),
   fakeMenu({ date: '2025-03-24', mealId: mealTwo.id }),
 ])
-
-// TODO: erase if no longer needed
-describe('some function', () => {
-  it('should do something', async () => {})
-})
-
 describe('create a menu', () => {
   it('should create a day menu meal ', async () => {
     const record = fakeMenu({ mealId: mealOne.id, date: '2025-05-06' })

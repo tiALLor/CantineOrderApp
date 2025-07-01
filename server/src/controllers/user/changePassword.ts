@@ -5,6 +5,7 @@ import provideRepos from '@server/trpc/provideRepos'
 import bcrypt, { hash } from 'bcrypt'
 import config from '@server/config'
 import { TRPCError } from '@trpc/server'
+import { assertError } from '@server/utils/errors'
 
 const addPepper = (password: string) =>
   `${password}${config.auth.passwordPepper}`
@@ -42,10 +43,16 @@ export default authenticatedProcedure
         config.auth.passwordCost
       )
 
-      const changedUser = await repos.userRepository.updatePassword({
-        id: authUser.id,
-        password: newPasswordHash,
-      })
+      const changedUser = await repos.userRepository
+        .updatePassword({
+          id: authUser.id,
+          password: newPasswordHash,
+        })
+        .catch((error: unknown) => {
+          assertError(error)
+
+          throw error
+        })
 
       return {
         id: changedUser.id,

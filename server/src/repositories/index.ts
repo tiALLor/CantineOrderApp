@@ -1,10 +1,10 @@
 import type { Database } from '@server/database'
 
-// TODO: update the links to repository handlers
 import { roleRepository } from './roleRepository'
 import { userRepository } from './userRepository'
 import { mealRepository } from './mealRepository'
 import { menuRepository } from './menuRepository'
+import { orderRepository } from './orderRepository'
 
 export type RepositoryFactory = <T>(db: Database) => T
 
@@ -14,6 +14,7 @@ const repositories = {
   userRepository,
   mealRepository,
   menuRepository,
+  orderRepository,
 }
 
 export type RepositoriesFactories = typeof repositories

@@ -3,6 +3,7 @@ import { chefAuthProcedure } from '@server/trpc/chefAuthProcedure'
 import provideRepos from '@server/trpc/provideRepos'
 import { TRPCError } from '@trpc/server'
 import { idSchema } from '@server/entities/shared'
+import { assertError } from '@server/utils/errors'
 
 export default chefAuthProcedure
   .use(provideRepos({ menuRepository }))
@@ -10,7 +11,16 @@ export default chefAuthProcedure
   .mutation(async ({ input: id, ctx: { repos } }): Promise<{ id: number }> => {
     const deletedMenuMeal = await repos.menuRepository
       .deleteMenuMealById(id)
-      .catch((error) => {
+      .catch((error: unknown) => {
+        assertError(error)
+
+        if (error.message.includes('foreign')) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Reference to meal do not exist',
+            cause: error,
+          })
+        }
         throw error
       })
 

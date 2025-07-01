@@ -6,10 +6,6 @@ import {
 } from '../order'
 import { fakeOrder } from './fakes'
 
-// TODO: erase if n o longer needed
-describe('orderSchema - schema parse', () => {
-  it('should do something', async () => {})
-})
 
 describe('orderSchema - schema parse', () => {
   it('should parse the schema with date as string', async () => {
@@ -26,6 +22,22 @@ describe('orderSchema - schema parse', () => {
     const order = orderSchema.parse(record)
 
     expect(order).toEqual({ ...record, date: new Date('2025-01-05') })
+  })
+
+  it('should parse the schema with null values as MealId', async () => {
+    const record = fakeOrder({ id: 122, soupMealId: null, mainMealId: null })
+
+    const order = orderSchema.parse(record)
+
+    expect(order).toEqual({ ...record })
+  })
+
+  it('should parse the schema without MealId values, returning null as default', async () => {
+    const record = { id: 122, userId: 3421, date: new Date('2025-01-05') }
+
+    const order = orderSchema.parse(record)
+
+    expect(order).toEqual({ ...record, soupMealId: null, mainMealId: null })
   })
 
   it('should throw a error by invalid date ', async () => {

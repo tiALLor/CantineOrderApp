@@ -9,11 +9,6 @@ const repository = userRepository(db)
 
 const [userOne, userTwo] = await insertAll(db, 'user', [fakeUser(), fakeUser()])
 
-// TODO: erase if no longer needed
-describe('some function', () => {
-  it('should do something', async () => {})
-})
-
 describe('create user', () => {
   it('should create user', async () => {
     const record = fakeUser()

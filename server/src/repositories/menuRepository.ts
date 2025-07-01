@@ -82,3 +82,5 @@ export function menuRepository(db: Database) {
     },
   }
 }
+
+export type MenuRepository = ReturnType<typeof menuRepository>

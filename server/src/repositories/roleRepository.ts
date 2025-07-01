@@ -28,4 +28,4 @@ export function roleRepository(db: Database) {
   }
 }
 
-export type UserRepository = ReturnType<typeof roleRepository>
+export type RoleRepository = ReturnType<typeof roleRepository>

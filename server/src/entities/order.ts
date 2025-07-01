@@ -1,9 +1,8 @@
 import { z } from 'zod'
-import type { Insertable, Selectable, Updateable } from 'kysely'
+import type { Insertable, Selectable } from 'kysely'
 import type { Order } from '@server/database/types'
 import { idSchema, dateSchema } from './shared'
 import { mealTypeSchema } from './meal'
-import { menuSchema } from './menu'
 
 export const orderSchema = z.object({
   id: idSchema,
@@ -31,12 +30,17 @@ export type OrderPublic = Pick<
   (typeof orderKeyPublic)[number]
 >
 
-export const orderUpdateable = orderInsertableSchema.partial()
+export const orderUpdateableSchema = orderInsertableSchema
+  .pick({
+    soupMealId: true,
+    mainMealId: true,
+  })
+  .partial()
+  .extend({
+    date: orderInsertableSchema.shape.date,
+  })
 
-export type OrderUpdateable = Pick<
-  Updateable<Order>,
-  (typeof orderKeyPublic)[number]
->
+export type OrderUpdateable = z.infer<typeof orderUpdateableSchema>
 
 // special cases get by type and dates as [] search conditions
 export const orderSchemaGetByTypeDates = z.object({
@@ -55,9 +59,7 @@ export const orderSchemaGetByYearMonth = z.object({
   month: z.coerce.number().int().min(1).max(12),
 })
 
-export type OrderSchemaGetByYearMonth = z.infer<
-  typeof orderSchemaGetByYearMonth
->
+export type OrderGetByYearMonth = z.infer<typeof orderSchemaGetByYearMonth>
 
 // special case returning users order with user and meal details
 
@@ -69,15 +71,13 @@ const orderWithUserMealSchema = orderSchema.extend({
   mainMealPrice: z.number().nullable(),
 })
 
-export type OrderWithUserMealSchema = z.infer<typeof orderWithUserMealSchema>
+export type OrderWithUserMeal = z.infer<typeof orderWithUserMealSchema>
 
-// // special case returning meal summary orders with meal details
-
-const orderSummaryWithMealSchema = menuSchema.extend({
-  mealName: z.string(),
-  quantity: z.number(),
+export const priceEurSchema = z.object({
+  priceEur: z.coerce.string().refine((val) => {
+    const num = Number(val)
+    return !Number.isNaN(num) && num > 0
+  }),
 })
 
-export type OrderSummaryWithMealSchema = z.infer<
-  typeof orderSummaryWithMealSchema
->
+export type PriceEurSchema = z.infer<typeof priceEurSchema>

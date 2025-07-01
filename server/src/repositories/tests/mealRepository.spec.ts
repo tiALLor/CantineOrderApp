@@ -12,11 +12,6 @@ const [mealOne, mealTwo] = await insertAll(db, 'meal', [
   fakeMeal({ type: 'main' }),
 ])
 
-// TODO: erase if no longer needed
-describe('some function', () => {
-  it('should do something', async () => {})
-})
-
 describe('create a meal', () => {
   it('should create a meal', async () => {
     const record = fakeMeal()

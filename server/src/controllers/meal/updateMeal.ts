@@ -5,6 +5,7 @@ import provideRepos from '@server/trpc/provideRepos'
 import { mealUpdateableSchema, type MealPublic } from '@server/entities/meal'
 import { TRPCError } from '@trpc/server'
 import { idSchema } from '@server/entities/shared'
+import { assertError } from '@server/utils/errors'
 
 export default chefAuthProcedure
   .use(provideRepos({ mealRepository }))
@@ -21,7 +22,9 @@ export default chefAuthProcedure
     }): Promise<MealPublic> => {
       const mealUpdated = await repos.mealRepository
         .updateMeal(id, mealData)
-        .catch((error) => {
+        .catch((error: unknown) => {
+          assertError(error)
+
           throw error
         })
 

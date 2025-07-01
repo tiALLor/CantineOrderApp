@@ -20,9 +20,6 @@ const { createMeal } = createCaller(
   )
 )
 
-// TODO erase if not needed
-it('should do something', async () => {})
-
 it('should create a meal', async () => {
   // const mealData = fakeMeal()
 

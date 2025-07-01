@@ -6,6 +6,7 @@ import { fakeUser, fakeMeal, fakeMenu } from '@server/entities/tests/fakes'
 import { authContext } from '@tests/utils/context'
 import { authUserSchemaWithRoleName } from '@server/entities/user'
 import menuRouter from '@server/controllers/menu'
+import { addDays, format } from 'date-fns'
 
 const db = await wrapInRollbacks(createTestDatabase())
 const createCaller = createCallerFactory(menuRouter)
@@ -18,9 +19,12 @@ const [mealOne, mealTwo, mealTree] = await insertAll(db, 'meal', [
   fakeMeal({ type: 'main' }),
 ])
 
+const dateAsString = format(addDays(new Date(), 1), 'yyyy-MM-dd')
+const validDate = new Date(dateAsString)
+
 await insertAll(db, 'menu', [
-  fakeMenu({ date: '2025-03-23', mealId: mealOne.id }),
-  fakeMenu({ date: '2025-03-23', mealId: mealTwo.id }),
+  fakeMenu({ date: validDate, mealId: mealOne.id }),
+  fakeMenu({ date: validDate, mealId: mealTwo.id }),
 ])
 
 const { addMenuMeal } = createCaller(
@@ -30,12 +34,9 @@ const { addMenuMeal } = createCaller(
   )
 )
 
-// TODO erase if not needed
-it('should do something', async () => {})
-
 it('should create a menu meal element', async () => {
   const menuMealData = {
-    date: new Date('2025-03-23'),
+    date: validDate,
     mealId: mealTree.id,
   }
 
@@ -43,7 +44,7 @@ it('should create a menu meal element', async () => {
 
   expect(menuMeal).toEqual({
     ...menuMealData,
-    date: '2025-03-23',
+    date: dateAsString,
     id: expect.any(Number),
   })
 
@@ -54,13 +55,13 @@ it('should create a menu meal element', async () => {
   expect(menuMealInDatabase).toEqual({
     ...menuMealData,
     id: expect.any(Number),
-    date: '2025-03-23',
+    date: dateAsString,
   })
 })
 
 it('should trow a error if meal exist in menu date', async () => {
   const menuMealData = {
-    date: new Date('2025-03-23'),
+    date: validDate,
     mealId: mealOne.id,
   }
 
