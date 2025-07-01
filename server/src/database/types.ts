@@ -22,6 +22,13 @@ export interface Menu {
   mealId: number
 }
 
+export interface Order {
+  date: Timestamp
+  id: Generated<number>
+  soupId: number
+  userId: number
+}
+
 export interface Role {
   id: Generated<number>
   name: string
@@ -38,6 +45,7 @@ export interface User {
 export interface DB {
   meal: Meal
   menu: Menu
+  order: Order
   role: Role
   user: User
 }
