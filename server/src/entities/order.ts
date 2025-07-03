@@ -36,9 +36,9 @@ export const orderUpdateableSchema = orderInsertableSchema
     mainMealId: true,
   })
   .partial()
-  .extend({
-    date: orderInsertableSchema.shape.date,
-  })
+.extend({
+  date: orderInsertableSchema.shape.date,
+})
 
 export type OrderUpdateable = z.infer<typeof orderUpdateableSchema>
 

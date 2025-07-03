@@ -80,6 +80,18 @@ export function menuRepository(db: Database) {
         .where('id', '=', id)
         .executeTakeFirst()
     },
+
+    async getMealsIdByDate(date: Date): Promise<number[]> {
+      const meals = await db
+        .selectFrom('menu')
+        .where('date', '=', date)
+        .select('mealId')
+        .execute()
+
+      const mealIdsArray = meals.map((row) => row.mealId)
+
+      return mealIdsArray
+    },
   }
 }
 

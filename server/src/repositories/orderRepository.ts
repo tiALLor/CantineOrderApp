@@ -8,7 +8,6 @@ import {
   type OrderGetByYearMonth,
   type PriceEurSchema,
 } from '@server/entities/order'
-import { omit } from 'lodash-es'
 
 export function orderRepository(db: Database) {
   return {
@@ -22,14 +21,14 @@ export function orderRepository(db: Database) {
 
     async updateOrder(
       userId: number,
-      date: Date,
-      record: OrderUpdateable
+      updateData: OrderUpdateable
     ): Promise<OrderPublic> {
+      const { date, ...records } = updateData
       const updatedOrder = await db
         .updateTable('order')
         .where('userId', '=', userId)
         .where('date', '=', date)
-        .set(omit(record, ['date']))
+        .set(records)
         .returning(orderKeyPublic)
         .executeTakeFirst()
 
@@ -68,7 +67,7 @@ export function orderRepository(db: Database) {
     },
 
     async getMonthlyCosts(
-      id: number,
+      userId: number,
       record: OrderGetByYearMonth
     ): Promise<PriceEurSchema> {
       const from = new Date(record.year, record.month - 1, 1)
@@ -76,11 +75,9 @@ export function orderRepository(db: Database) {
 
       const orders = await db
         .selectFrom('order')
-        // .leftJoin('menu as main', 'order.mainMealId', 'main.id')
         .leftJoin('meal as mainMeal', 'order.mainMealId', 'mainMeal.id')
-        // .leftJoin('menu as soup', 'order.soupMealId', 'soup.id')
         .leftJoin('meal as soupMeal', 'order.soupMealId', 'soupMeal.id')
-        .where('order.userId', '=', id)
+        .where('order.userId', '=', userId)
         .where('order.date', '>=', from)
         .where('order.date', '<', to)
         .select([
@@ -98,36 +95,15 @@ export function orderRepository(db: Database) {
       return { priceEur: summary.toString() }
     },
 
-    // async getMonthlyCosts(
-    //   id: number,
-    //   record: OrderGetByYearMonth
-    // ): Promise<PriceEurSchema> {
-    //   const from = new Date(record.year, record.month - 1, 1)
-    //   const to = new Date(record.year, record.month, 1)
+    async orderExists(userId: number, date: Date): Promise<boolean> {
+      const order = await db
+        .selectFrom('order')
+        .where('order.userId', '=', userId)
+        .where('order.date', '=', date)
+        .executeTakeFirst()
 
-    //   const orders = await db
-    //     .selectFrom('order')
-    //     .leftJoin('menu as main', 'order.mainMealId', 'main.id')
-    //     .leftJoin('meal as mainMeal', 'main.mealId', 'mainMeal.id')
-    //     .leftJoin('menu as soup', 'order.soupMealId', 'soup.id')
-    //     .leftJoin('meal as soupMeal', 'soup.mealId', 'soupMeal.id')
-    //     .where('order.userId', '=', id)
-    //     .where('order.date', '>=', from)
-    //     .where('order.date', '<', to)
-    //     .select([
-    //       'mainMeal.priceEur as mainPrice',
-    //       'soupMeal.priceEur as soupPrice',
-    //     ])
-    //     .execute()
-
-    //   const summary = orders.reduce((sum, row) => {
-    //     const main = Number(row.mainPrice ?? 0)
-    //     const soup = Number(row.soupPrice ?? 0)
-    //     return sum + main + soup
-    //   }, 0)
-
-    //   return { priceEur: summary.toString() }
-    // },
+      return !!order
+    },
   }
 }
 

@@ -131,7 +131,6 @@ describe('updateOrder', () => {
 
     const updatedOrder = await repository.updateOrder(
       orderForMenu.userId,
-      validDate,
       record
     )
 
@@ -165,7 +164,6 @@ describe('updateOrder', () => {
 
     const updatedOrder = await repository.updateOrder(
       orderForMenu.userId,
-      validDate,
       record
     )
 
