@@ -8,14 +8,14 @@ import { dateSchema } from '@server/entities/shared'
 
 export default authenticatedProcedure
   .use(provideRepos({ orderRepository }))
-  .input(z.array(dateSchema))
-  .query(
+  .input(z.object({ dates: z.array(dateSchema) }))
+  .mutation(
     async ({
       input: dates,
       ctx: { repos, authUser },
     }): Promise<OrderWithUserMeal[]> => {
       const monthlyCosts = await repos.orderRepository
-        .getOrderByUserDates(authUser.id, dates)
+        .getOrderByUserDates(authUser.id, dates.dates)
         .catch((error: unknown) => {
           assertError(error)
 

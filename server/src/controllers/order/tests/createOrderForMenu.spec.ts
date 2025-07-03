@@ -2,11 +2,7 @@ import { createTestDatabase } from '@tests/utils/database'
 import { wrapInRollbacks } from '@tests/utils/transactions'
 import { createCallerFactory } from '@server/trpc'
 import { selectAll, insertAll } from '@tests/utils/records'
-import {
-  fakeUser,
-  fakeMeal,
-  fakeMenu,
-} from '@server/entities/tests/fakes'
+import { fakeUser, fakeMeal, fakeMenu } from '@server/entities/tests/fakes'
 import { authContext } from '@tests/utils/context'
 import { authUserSchemaWithRoleName } from '@server/entities/user'
 import orderRouter from '@server/controllers/order'
@@ -31,7 +27,7 @@ const validDate = new Date(dateAsString)
 const anotherDateAsString = format(addDays(new Date(), 2), 'yyyy-MM-dd')
 const anotherValidDate = new Date(anotherDateAsString)
 
-const [menuOne, menuTwo,] = await insertAll(db, 'menu', [
+await insertAll(db, 'menu', [
   fakeMenu({ date: validDate, mealId: mealOne.id }),
   fakeMenu({ date: validDate, mealId: mealTwo.id }),
   fakeMenu({ date: anotherValidDate, mealId: mealTree.id }),
@@ -50,8 +46,8 @@ it('should create a menu order', async () => {
   const record = {
     date: validDate,
     userId: userOne.id,
-    soupMealId: menuOne.id,
-    mainMealId: menuTwo.id,
+    soupMealId: mealOne.id,
+    mainMealId: mealTwo.id,
   }
 
   const orderForMenu = await createOrderForMenu(record)

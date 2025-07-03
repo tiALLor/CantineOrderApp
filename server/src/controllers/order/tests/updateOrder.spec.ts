@@ -46,8 +46,8 @@ it('should update the order', async () => {
   const [orderForMenu] = await insertAll(db, 'order', {
     date: validDate,
     userId: userOne.id,
-    soupMealId: menuOne.id,
-    mainMealId: menuTwo.id,
+    soupMealId: mealOne.id,
+    mainMealId: mealTwo.id,
   })
 
   const record = {
@@ -77,8 +77,8 @@ it('should update the order partially', async () => {
   const [orderForMenu] = await insertAll(db, 'order', {
     date: validDate,
     userId: userOne.id,
-    soupMealId: menuOne.id,
-    mainMealId: menuTwo.id,
+    soupMealId: mealOne.id,
+    mainMealId: mealTwo.id,
   })
 
   const record = {
@@ -93,7 +93,7 @@ it('should update the order partially', async () => {
     date: dateAsString,
     userId: userOne.id,
     soupMealId: null,
-    mainMealId: menuTwo.id,
+    mainMealId: mealTwo.id,
   })
 
   const [orderForMenuInDatabase] = await selectAll(db, 'order', (eb) =>

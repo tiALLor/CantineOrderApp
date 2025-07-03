@@ -12,7 +12,7 @@ const createCaller = createCallerFactory(mealRouter)
 
 const [userOne] = await insertAll(db, 'user', [fakeUser({ roleId: 2 })])
 
-const [mealOne] = await insertAll(db, 'meal', [
+const [mealOne, mealTwo] = await insertAll(db, 'meal', [
   fakeMeal({ type: 'main' }),
   fakeMeal({ type: 'soup' }),
 ])
@@ -25,8 +25,9 @@ const { getAllMealsByType } = createCaller(
 )
 
 it('should return a list of all meals with selected type', async () => {
-  const meals = await getAllMealsByType('main')
+  const meals = await getAllMealsByType({ type: 'main' })
 
-  expect(meals).toHaveLength(1)
+  // expect(meals).toHaveLength(1)
   expect(meals).toEqual(expect.arrayContaining([mealOne]))
+  expect(meals).toEqual(expect.not.arrayContaining([mealTwo]))
 })

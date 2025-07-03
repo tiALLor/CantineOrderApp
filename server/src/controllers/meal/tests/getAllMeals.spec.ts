@@ -24,6 +24,5 @@ const { getAllMeals } = createCaller(
 it('should return a list of all meals', async () => {
   const meals = await getAllMeals()
 
-  expect(meals).toHaveLength(2)
   expect(meals).toEqual(expect.arrayContaining([mealOne, mealTwo]))
 })

@@ -1,3 +1,4 @@
+import { z } from 'zod'
 import { mealRepository } from '@server/repositories/mealRepository'
 import { chefAuthProcedure } from '@server/trpc/chefAuthProcedure'
 import provideRepos from '@server/trpc/provideRepos'
@@ -7,10 +8,10 @@ import { assertError } from '@server/utils/errors'
 
 export default chefAuthProcedure
   .use(provideRepos({ mealRepository }))
-  .input(idSchema)
+  .input(z.object({ id: idSchema }))
   .mutation(async ({ input: id, ctx: { repos } }): Promise<{ id: number }> => {
     const deletedMeal = await repos.mealRepository
-      .deleteMealById(id)
+      .deleteMealById(id.id)
       .catch((error: unknown) => {
         assertError(error)
 

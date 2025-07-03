@@ -1,0 +1,47 @@
+@localUrl= http://localhost:3000/api/v1/trpc/
+@adminAccessToken= eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJuYW1lIjoiYWRtaW4iLCJyb2xlTmFtZSI6ImFkbWluIn0sImlhdCI6MTc1MTUzOTE0NywiZXhwIjoxNzUyMTQzOTQ3fQ.C4jlPfcN0Zh2y5vlS8iXE10YLIO4cGgAiEycZAbYxuw
+@chefAccessToken= eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoyLCJuYW1lIjoiY2hlZiIsInJvbGVOYW1lIjoiY2hlZiJ9LCJpYXQiOjE3NTE1NDAwNjEsImV4cCI6MTc1MjE0NDg2MX0.3YWrD4BvgrSMmiF_32PAwkbjE8evGOHVRRRWVk43OCQ
+@userAccessToken= eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxMjMsIm5hbWUiOiJ1c2VyMTIzIiwicm9sZU5hbWUiOiJ1c2VyIn0sImlhdCI6MTc1MTU0MTcyOSwiZXhwIjoxNzUyMTQ2NTI5fQ.nSvEKsCy4PbA_SgJYlxez8UQYg_sSgcl0e56A-To7cU
+
+
+
+
+### check if the admin user can log in with default
+
+POST {{localUrl}}/user.login
+Content-Type: application/json
+
+{
+  "json": {
+    "email": "admin@email.com",
+    "password": "admin12345"
+  }
+}
+
+### create chef account as admin
+
+POST {{localUrl}}/user.createUser
+Authorization: Bearer {{adminAccessToken}}
+Content-Type: application/json
+
+{
+  "json": {
+    "email": "chef@email.com",
+    "password": "chef12345",
+    "name": "chef",
+    "roleName": "chef"
+  }
+}
+
+### login chef
+
+POST {{localUrl}}/user.login
+Content-Type: application/json
+
+{
+  "json": {
+    "email": "chef@email.com",
+    "password": "chef12345"
+  }
+}
+

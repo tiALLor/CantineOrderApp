@@ -46,18 +46,18 @@ it('should get order data by user and date', async () => {
     {
       date: validDate,
       userId: userOne.id,
-      soupMealId: menuOne.id,
-      mainMealId: menuTwo.id,
+      soupMealId: mealOne.id,
+      mainMealId: mealTwo.id,
     },
     {
       date: anotherValidDate,
       userId: userOne.id,
-      soupMealId: menuTree.id,
-      mainMealId: menuFour.id,
+      soupMealId: mealTree.id,
+      mainMealId: mealFour.id,
     },
   ])
 
-  const order = await getOrderByUserDates([validDate, anotherValidDate])
+  const order = await getOrderByUserDates({dates: [validDate, anotherValidDate]})
 
   expect(order).toEqual(
     expect.arrayContaining([
@@ -66,10 +66,10 @@ it('should get order data by user and date', async () => {
         userName: userOne.name,
         date: dateAsString,
         userId: userOne.id,
-        soupMealId: menuOne.id,
+        soupMealId: mealOne.id,
         soupMealName: mealOne.name,
         soupMealPrice: mealOne.priceEur,
-        mainMealId: menuTwo.id,
+        mainMealId: mealTwo.id,
         mainMealName: mealTwo.name,
         mainMealPrice: mealTwo.priceEur,
       },
@@ -78,10 +78,10 @@ it('should get order data by user and date', async () => {
         userName: userOne.name,
         date: anotherDateAsString,
         userId: userOne.id,
-        soupMealId: menuTree.id,
+        soupMealId: mealTree.id,
         soupMealName: mealTree.name,
         soupMealPrice: mealTwo.priceEur,
-        mainMealId: menuFour.id,
+        mainMealId: mealFour.id,
         mainMealName: mealFour.name,
         mainMealPrice: mealFour.priceEur,
       },

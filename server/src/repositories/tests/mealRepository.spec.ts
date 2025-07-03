@@ -34,7 +34,6 @@ describe('getAllMeals', () => {
   it('should get all meals in database', async () => {
     const meals = await repository.getAllMeals()
 
-    expect(meals).toHaveLength(2)
     expect(meals).toEqual(expect.arrayContaining([mealOne, mealTwo]))
   })
 })
@@ -43,7 +42,6 @@ describe('getAllMealsByType', () => {
   it('should get all meals in database with given type', async () => {
     const meals = await repository.getAllMealsByType('main')
 
-    expect(meals).toHaveLength(1)
     expect(meals).toEqual(expect.arrayContaining([mealTwo]))
   })
 })

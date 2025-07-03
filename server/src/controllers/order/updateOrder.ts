@@ -19,6 +19,7 @@ export default authenticatedProcedure
           message: 'you can not place orders for today or past',
         })
       }
+      // if order exist
 
       const updatedOrder = await repos.orderRepository
         .updateOrder(authUser.id, updateData.date, updateData)
@@ -35,6 +36,7 @@ export default authenticatedProcedure
 
           throw error
         })
+
       return updatedOrder
     }
   )

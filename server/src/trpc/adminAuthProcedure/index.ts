@@ -21,7 +21,7 @@ export const adminAuthProcedure = authenticatedProcedure
     if (role !== 'admin') {
       throw new TRPCError({
         code: 'UNAUTHORIZED',
-        message: 'Logged user does not have role "chef"',
+        message: 'Logged user does not have role "admin"',
       })
     }
 

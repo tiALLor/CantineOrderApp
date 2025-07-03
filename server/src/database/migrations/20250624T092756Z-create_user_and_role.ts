@@ -2,7 +2,7 @@ import type { Kysely } from 'kysely'
 import { getPasswordHash } from '@server/hash'
 import config from '@server/config'
 
-const INITIAL_ADMIN_PASSWORD_HASH = getPasswordHash(config.admin.password)
+const INITIAL_ADMIN_PASSWORD_HASH = await getPasswordHash(config.admin.password)
 
 export async function up(db: Kysely<any>) {
   await db.schema

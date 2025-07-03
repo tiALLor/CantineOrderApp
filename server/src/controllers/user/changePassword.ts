@@ -31,6 +31,7 @@ export default authenticatedProcedure
         addPepper(oldPassword),
         user.password
       )
+
       if (!isPassMatch) {
         throw new TRPCError({
           code: 'UNAUTHORIZED',

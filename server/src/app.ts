@@ -45,7 +45,7 @@ export default function createApp(db: Database) {
     app.use('/api/v1/trpc-panel', (_, res) =>
       res.send(
         renderTrpcPanel(appRouter, {
-          url: `http://localhost:${config.port}/api/v1/trpc`,
+          url: `httpz://localhost:${config.port}/api/v1/trpc`,
           transformer: 'superjson',
         })
       )

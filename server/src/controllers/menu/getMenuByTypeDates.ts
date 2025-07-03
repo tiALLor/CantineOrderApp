@@ -9,22 +9,24 @@ import {
 export default publicProcedure
   .use(provideRepos({ menuRepository }))
   .input(menuSchemaGetByTypeDates)
-  .query(async ({ input: menuData, ctx: { repos } }): Promise<GroupedMenus> => {
-    const menus = await repos.menuRepository.getMenuByTypeByDate(menuData)
+  .mutation(
+    async ({ input: menuData, ctx: { repos } }): Promise<GroupedMenus> => {
+      const menus = await repos.menuRepository.getMenuByTypeByDate(menuData)
 
-    const groupedByDate = menus.reduce(
-      (acc, menu) => {
-        const dateKey =
-          typeof menu.date === 'string'
-            ? menu.date
-            : menu.date.toISOString().slice(0, 10)
+      const groupedByDate = menus.reduce(
+        (acc, menu) => {
+          const dateKey =
+            typeof menu.date === 'string'
+              ? menu.date
+              : menu.date.toISOString().slice(0, 10)
 
-        acc[dateKey] ??= []
-        acc[dateKey].push(menu)
-        return acc
-      },
-      {} as Record<string, typeof menus>
-    )
+          acc[dateKey] ??= []
+          acc[dateKey].push(menu)
+          return acc
+        },
+        {} as Record<string, typeof menus>
+      )
 
-    return groupedByDate
-  })
+      return groupedByDate
+    }
+  )

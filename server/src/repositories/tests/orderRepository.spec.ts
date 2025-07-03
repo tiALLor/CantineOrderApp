@@ -21,7 +21,7 @@ const validDate = new Date(dateAsString)
 const anotherDateAsString = '2025-05-03'
 const anotherValidDate = new Date(anotherDateAsString)
 
-const [menuOne, menuTwo, menuTree, menuFour] = await insertAll(db, 'menu', [
+await insertAll(db, 'menu', [
   fakeMenu({ date: validDate, mealId: mealOne.id }),
   fakeMenu({ date: validDate, mealId: mealTwo.id }),
   fakeMenu({ date: anotherValidDate, mealId: mealTree.id }),
@@ -34,8 +34,8 @@ describe('createOrderForMenu - create a order', () => {
     const record = {
       date: validDate,
       userId: userOne.id,
-      soupMealId: menuOne.id,
-      mainMealId: menuTwo.id,
+      soupMealId: mealOne.id,
+      mainMealId: mealTwo.id,
     }
 
     const orderForMenu = await repository.createOrderForMenu(record)
@@ -104,7 +104,7 @@ describe('createOrderForMenu - create a order', () => {
     const record = {
       date: validDate,
       userId: userOne.id,
-      soupMealId: menuOne.id,
+      soupMealId: mealOne.id,
       mainMealId: 99999,
     }
 
@@ -119,8 +119,8 @@ describe('updateOrder', () => {
     const [orderForMenu] = await insertAll(db, 'order', {
       date: validDate,
       userId: userOne.id,
-      soupMealId: menuOne.id,
-      mainMealId: menuTwo.id,
+      soupMealId: mealOne.id,
+      mainMealId: mealTwo.id,
     })
 
     const record = {
@@ -154,8 +154,8 @@ describe('updateOrder', () => {
     const [orderForMenu] = await insertAll(db, 'order', {
       date: validDate,
       userId: userOne.id,
-      soupMealId: menuOne.id,
-      mainMealId: menuTwo.id,
+      soupMealId: mealOne.id,
+      mainMealId: mealTwo.id,
     })
 
     const record = {
@@ -174,7 +174,7 @@ describe('updateOrder', () => {
       date: dateAsString,
       userId: userOne.id,
       soupMealId: null,
-      mainMealId: menuTwo.id,
+      mainMealId: mealTwo.id,
     })
 
     const [orderForMenuInDatabase] = await selectAll(db, 'order', (eb) =>
@@ -191,14 +191,14 @@ describe('get order data by user and date', () => {
       {
         date: validDate,
         userId: userOne.id,
-        soupMealId: menuOne.id,
-        mainMealId: menuTwo.id,
+        soupMealId: mealOne.id,
+        mainMealId: mealTwo.id,
       },
       {
         date: anotherValidDate,
         userId: userOne.id,
-        soupMealId: menuTree.id,
-        mainMealId: menuFour.id,
+        soupMealId: mealTree.id,
+        mainMealId: mealFour.id,
       },
     ])
 
@@ -214,10 +214,10 @@ describe('get order data by user and date', () => {
           userName: userOne.name,
           date: dateAsString,
           userId: userOne.id,
-          soupMealId: menuOne.id,
+          soupMealId: mealOne.id,
           soupMealName: mealOne.name,
           soupMealPrice: mealOne.priceEur,
-          mainMealId: menuTwo.id,
+          mainMealId: mealTwo.id,
           mainMealName: mealTwo.name,
           mainMealPrice: mealTwo.priceEur,
         },
@@ -226,10 +226,10 @@ describe('get order data by user and date', () => {
           userName: userOne.name,
           date: anotherDateAsString,
           userId: userOne.id,
-          soupMealId: menuTree.id,
+          soupMealId: mealTree.id,
           soupMealName: mealTree.name,
           soupMealPrice: mealTwo.priceEur,
-          mainMealId: menuFour.id,
+          mainMealId: mealFour.id,
           mainMealName: mealFour.name,
           mainMealPrice: mealFour.priceEur,
         },
@@ -244,14 +244,14 @@ describe('get users monthly cost summary', () => {
       {
         date: validDate,
         userId: userOne.id,
-        soupMealId: menuOne.id,
-        mainMealId: menuTwo.id,
+        soupMealId: mealOne.id,
+        mainMealId: mealTwo.id,
       },
       {
         date: anotherValidDate,
         userId: userOne.id,
-        soupMealId: menuTree.id,
-        mainMealId: menuFour.id,
+        soupMealId: mealTree.id,
+        mainMealId: mealFour.id,
       },
     ])
 

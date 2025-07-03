@@ -6,6 +6,7 @@ import { TRPCError } from '@trpc/server'
 import { assertError } from '@server/utils/errors'
 import { getPasswordHash } from '@server/hash'
 
+// remove roleId from input and adjust the tests
 export default publicProcedure
   .use(provideRepos({ userRepository }))
   .input(
@@ -13,7 +14,6 @@ export default publicProcedure
       email: true,
       password: true,
       name: true,
-      roleId: true,
     })
   )
   .mutation(async ({ input: user, ctx: { repos } }) => {

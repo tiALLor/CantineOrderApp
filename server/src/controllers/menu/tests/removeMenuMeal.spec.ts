@@ -32,7 +32,7 @@ const { removeMenuMeal } = createCaller(
 it('should remove meal from menu with specified day', async () => {
   // const mealData = fakeMeal()
 
-  const result = await removeMenuMeal(menuOne.id)
+  const result = await removeMenuMeal({ id: menuOne.id })
 
   expect(result).toEqual({ id: menuOne.id })
 
@@ -46,5 +46,5 @@ it('should remove meal from menu with specified day', async () => {
 it('should throw a error if meal id not found', async () => {
   // const mealData = fakeMeal()
 
-  await expect(removeMenuMeal(99999)).rejects.toThrow(/not_found/i)
+  await expect(removeMenuMeal({ id: 99999 })).rejects.toThrow(/not_found/i)
 })

@@ -26,7 +26,7 @@ const validDate = new Date(dateAsString)
 const anotherDateAsString = '2025-05-03'
 const anotherValidDate = new Date(anotherDateAsString)
 
-const [menuOne, menuTwo, menuTree, menuFour] = await insertAll(db, 'menu', [
+await insertAll(db, 'menu', [
   fakeMenu({ date: validDate, mealId: mealOne.id }),
   fakeMenu({ date: validDate, mealId: mealTwo.id }),
   fakeMenu({ date: anotherValidDate, mealId: mealTree.id }),
@@ -46,14 +46,14 @@ it('get users monthly cost summary', async () => {
     {
       date: validDate,
       userId: userOne.id,
-      soupMealId: menuOne.id,
-      mainMealId: menuTwo.id,
+      soupMealId: mealOne.id,
+      mainMealId: mealTwo.id,
     },
     {
       date: anotherValidDate,
       userId: userOne.id,
-      soupMealId: menuTree.id,
-      mainMealId: menuFour.id,
+      soupMealId: mealTree.id,
+      mainMealId: mealFour.id,
     },
   ])
 

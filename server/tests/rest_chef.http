@@ -1,0 +1,239 @@
+@localUrl= http://localhost:3000/api/v1/trpc/
+@adminAccessToken= eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJuYW1lIjoiYWRtaW4iLCJyb2xlTmFtZSI6ImFkbWluIn0sImlhdCI6MTc1MTUzOTE0NywiZXhwIjoxNzUyMTQzOTQ3fQ.C4jlPfcN0Zh2y5vlS8iXE10YLIO4cGgAiEycZAbYxuw
+@chefAccessToken= eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoyLCJuYW1lIjoiY2hlZiIsInJvbGVOYW1lIjoiY2hlZiJ9LCJpYXQiOjE3NTE1NDAwNjEsImV4cCI6MTc1MjE0NDg2MX0.3YWrD4BvgrSMmiF_32PAwkbjE8evGOHVRRRWVk43OCQ
+@userAccessToken= eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxMjMsIm5hbWUiOiJ1c2VyMTIzIiwicm9sZU5hbWUiOiJ1c2VyIn0sImlhdCI6MTc1MTU0MTcyOSwiZXhwIjoxNzUyMTQ2NTI5fQ.nSvEKsCy4PbA_SgJYlxez8UQYg_sSgcl0e56A-To7cU
+
+
+
+### login chef
+
+POST {{localUrl}}/user.login
+Content-Type: application/json
+
+{
+  "json": {
+    "email": "chef@email.com",
+    "password": "chef12345"
+  }
+}
+
+#####################################
+
+### chef creates a main meal
+
+POST {{localUrl}}/meal.createMeal
+Authorization: Bearer {{chefAccessToken}}
+Content-Type: application/json
+
+{
+  "json": {
+    "name": "chicken with rise",
+    "priceEur": "5.05",
+    "type": "main"
+  }
+}
+
+
+
+
+### chef creates a soup
+
+POST {{localUrl}}/meal.createMeal
+Authorization: Bearer {{chefAccessToken}}
+Content-Type: application/json
+
+{
+  "json": {
+    "name": "tomato soup",
+    "priceEur": "2.05",
+    "type": "soup"
+  }
+}
+
+### chef get all meals in database
+
+GET {{localUrl}}/meal.getAllMeals
+Authorization: Bearer {{chefAccessToken}}
+
+
+
+### chef get all meals by type main in database
+
+POST {{localUrl}}/meal.getAllMealsByType
+Authorization: Bearer {{chefAccessToken}}
+Content-Type: application/json
+
+{
+  "json": {
+    "type": "main"
+  }
+}
+
+### chef get all meals by type soup database
+
+POST {{localUrl}}/meal.getAllMealsByType
+Authorization: Bearer {{chefAccessToken}}
+Content-Type: application/json
+
+{
+  "json": {
+    "type": "soup"
+  }
+}
+
+#########################################
+
+### chef creates a meal for update
+
+POST {{localUrl}}/meal.createMeal
+Authorization: Bearer {{chefAccessToken}}
+Content-Type: application/json
+
+{
+  "json": {
+    "name": "to be updated",
+    "priceEur": "0.05",
+    "type": "soup"
+  }
+}
+
+### chef get all meals in database
+
+GET {{localUrl}}/meal.getAllMeals
+Authorization: Bearer {{chefAccessToken}}
+
+
+
+### chef meal updates the meal
+
+POST {{localUrl}}/meal.updateMeal
+Authorization: Bearer {{chefAccessToken}}
+Content-Type: application/json
+
+{
+  "json": {
+    "id": "3",
+    "mealData": {
+      "name": "updated",
+      "priceEur": "10.05",
+      "type": "main"
+    }
+  }
+}
+
+
+#########################################
+
+### chef creates a meal for delete
+
+POST {{localUrl}}/meal.createMeal
+Authorization: Bearer {{chefAccessToken}}
+Content-Type: application/json
+
+{
+  "json": {
+    "name": "to delete",
+    "priceEur": "2.05",
+    "type": "soup"
+  }
+}
+
+### chef get all meals in database
+
+GET {{localUrl}}/meal.getAllMeals
+Authorization: Bearer {{chefAccessToken}}
+
+
+
+### chef meal delete
+
+POST {{localUrl}}/meal.removeMeal
+Authorization: Bearer {{chefAccessToken}}
+Content-Type: application/json
+
+{
+  "json": {
+    "id": "501"
+  }
+}
+####################################
+
+### chef creates a menu meal - soup
+POST {{localUrl}}/menu.addMenuMeal
+Authorization: Bearer {{chefAccessToken}}
+Content-Type: application/json
+
+{
+  "json": {
+    "date": "2025-08-01",
+    "mealId": "2"
+  }
+}
+
+### chef creates a menu meal - main
+POST {{localUrl}}/menu.addMenuMeal
+Authorization: Bearer {{chefAccessToken}}
+Content-Type: application/json
+
+{
+  "json": {
+    "date": "2025-08-01",
+    "mealId": "1"
+  }
+}
+
+
+### chef get menu by dates and by meal type
+POST {{localUrl}}/menu.getMenuByTypeDates
+Authorization: Bearer {{chefAccessToken}}
+Content-Type: application/json
+
+{
+  "json": {
+    "dates": [
+      "2025-08-01"
+      ],
+    "type": "main"
+  }
+}
+
+####################################
+
+### chef creates a menu - meal for delete
+POST {{localUrl}}/menu.addMenuMeal
+Authorization: Bearer {{chefAccessToken}}
+Content-Type: application/json
+
+{
+  "json": {
+    "date": "2025-09-08",
+    "mealId": "502"
+  }
+}
+
+### chef get menu by dates and by meal type
+POST {{localUrl}}/menu.getMenuByTypeDates
+Authorization: Bearer {{chefAccessToken}}
+Content-Type: application/json
+
+{
+  "json": {
+    "dates": [
+      "2025-09-08"
+      ],
+    "type": "soup"
+  }
+}
+
+### chef deletes meal from menu
+POST {{localUrl}}/menu.removeMenuMeal
+Authorization: Bearer {{chefAccessToken}}
+Content-Type: application/json
+
+{
+  "json": {
+    "id": "496"
+  }
+}
+
+

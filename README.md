@@ -11,6 +11,15 @@ This project is a full-stack web application built with TypeScript, Express.js, 
 - Comprehensive back-end and front-end testing (Vitest, Playwright)
 - Monorepo structure for easy management of client and server
 - Linting and formatting with ESLint and Prettier
+- Role-based user access (`admin`, `chef`, `user`)
+- User with Role: admin can create other users will any given role
+- User with Role: chef can manage meals and menus
+- User with Role: user can order a menu and check 
+- Signup only for user with role user
+- Users can order meals (`main`, `soup`) for future dates
+- Menus are created per day and meal
+- Secure password handling (bcrypt + pepper)
+- To "poke" its existing functionality use trpc-panel a http://localhost:3000/api/v1/trpc-panel or user rest.http file in /server/tests with REST Client
 
 ## Project Structure
 
