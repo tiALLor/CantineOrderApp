@@ -1,7 +1,8 @@
 @localUrl= http://localhost:3000/api/v1/trpc/
-@adminAccessToken= eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJuYW1lIjoiYWRtaW4iLCJyb2xlTmFtZSI6ImFkbWluIn0sImlhdCI6MTc1MTUzOTE0NywiZXhwIjoxNzUyMTQzOTQ3fQ.C4jlPfcN0Zh2y5vlS8iXE10YLIO4cGgAiEycZAbYxuw
-@chefAccessToken= eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoyLCJuYW1lIjoiY2hlZiIsInJvbGVOYW1lIjoiY2hlZiJ9LCJpYXQiOjE3NTE1NDAwNjEsImV4cCI6MTc1MjE0NDg2MX0.3YWrD4BvgrSMmiF_32PAwkbjE8evGOHVRRRWVk43OCQ
+@adminAccessToken= eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJuYW1lIjoiYWRtaW4iLCJyb2xlTmFtZSI6ImFkbWluIn0sImlhdCI6MTc1MTY5OTI1MSwiZXhwIjoxNzUyMzA0MDUxfQ._NDev0l84K9rhN4yHBfGOuqftuiBbtxCQnwkjyjH2P4
+@chefAccessToken= eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxMDc0LCJuYW1lIjoiY2hlZiIsInJvbGVOYW1lIjoiY2hlZiJ9LCJpYXQiOjE3NTE2OTkzMzcsImV4cCI6MTc1MjMwNDEzN30.7gnZkMSTcBue1R16cBhjM2HdIYPSUXS67TvbeS1nkoE
 @userAccessToken= eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxMjMsIm5hbWUiOiJ1c2VyMTIzIiwicm9sZU5hbWUiOiJ1c2VyIn0sImlhdCI6MTc1MTU0MTcyOSwiZXhwIjoxNzUyMTQ2NTI5fQ.nSvEKsCy4PbA_SgJYlxez8UQYg_sSgcl0e56A-To7cU
+
 
 
 
@@ -112,7 +113,7 @@ Content-Type: application/json
 
 {
   "json": {
-    "id": "3",
+    "id": "722",
     "mealData": {
       "name": "updated",
       "priceEur": "10.05",
@@ -153,7 +154,7 @@ Content-Type: application/json
 
 {
   "json": {
-    "id": "501"
+    "id": "723"
   }
 }
 ####################################
@@ -165,7 +166,7 @@ Content-Type: application/json
 
 {
   "json": {
-    "date": "2025-08-01",
+    "date": "2025-08-03",
     "mealId": "2"
   }
 }
@@ -177,7 +178,7 @@ Content-Type: application/json
 
 {
   "json": {
-    "date": "2025-08-01",
+    "date": "2025-08-03",
     "mealId": "1"
   }
 }
@@ -191,9 +192,9 @@ Content-Type: application/json
 {
   "json": {
     "dates": [
-      "2025-08-01"
+      "2025-08-03"
       ],
-    "type": "main"
+    "type": "soup"
   }
 }
 
@@ -206,8 +207,8 @@ Content-Type: application/json
 
 {
   "json": {
-    "date": "2025-09-08",
-    "mealId": "502"
+    "date": "2025-10-09",
+    "mealId": "669"
   }
 }
 
@@ -219,9 +220,9 @@ Content-Type: application/json
 {
   "json": {
     "dates": [
-      "2025-09-08"
+      "2025-10-09"
       ],
-    "type": "soup"
+    "type": "main"
   }
 }
 
@@ -232,7 +233,7 @@ Content-Type: application/json
 
 {
   "json": {
-    "id": "496"
+    "id": "655"
   }
 }
 
