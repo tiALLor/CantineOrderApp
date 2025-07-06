@@ -7,10 +7,9 @@ import { userRepository } from '../userRepository'
 const db = await wrapInRollbacks(createTestDatabase())
 const repository = userRepository(db)
 
-const [userOne, userTwo] = await insertAll(db, 'user', [
-  fakeUser({ id: 2 }),
-  fakeUser({ id: 3 }),
-])
+afterEach(() => {
+  db.deleteFrom('user')
+})
 
 describe('create user', () => {
   it('should create user', async () => {
@@ -41,6 +40,7 @@ describe('create user', () => {
 
 describe('getByEmail', () => {
   it('should return a user according to provided email', async () => {
+    const [userOne] = await insertAll(db, 'user', [fakeUser()])
     const user = await repository.getByEmail(userOne.email)
 
     expect(user).toEqual(userOne)
@@ -55,6 +55,7 @@ describe('getByEmail', () => {
 
 describe('getByEmailWithRoleName', () => {
   it('should return a user according to provided email', async () => {
+    const [userOne] = await insertAll(db, 'user', [fakeUser()])
     const user = await repository.getByEmailWithRoleName(userOne.email)
 
     expect(user).toEqual({
@@ -72,6 +73,7 @@ describe('getByEmailWithRoleName', () => {
 
 describe('getByIdWithRoleName', () => {
   it('should return a user according to provided Id', async () => {
+    const [userTwo] = await insertAll(db, 'user', [fakeUser()])
     const user = await repository.getByIdWithRoleName(userTwo.id)
 
     expect(user).toEqual({

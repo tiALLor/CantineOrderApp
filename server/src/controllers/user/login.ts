@@ -41,6 +41,12 @@ export default publicProcedure
     }
 
     const payload = prepareTokenPayload(user)
+    if (!expiresIn) {
+      throw new TRPCError({
+        code: 'UNAUTHORIZED',
+        message: 'Incorrect password. Please try again.',
+      })
+    }
 
     const accessToken = jsonwebtoken.sign(payload, tokenKey, {
       expiresIn,

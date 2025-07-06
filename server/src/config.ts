@@ -27,7 +27,7 @@ const schema = z
 
         throw new Error('You must provide a TOKEN_KEY in a production env!')
       }),
-      expiresIn: z.string().or(z.number()).default('7d'),
+      expiresIn: z.coerce.string().default('7d'),
       passwordCost: z.coerce.number().default(isDevTest ? 6 : 12),
       passwordPepper: z.string().default('abc123'),
     }),
@@ -38,8 +38,8 @@ const schema = z
 
     admin: z.object({
       email: z.string().email().toLowerCase().default('admin@email.com'),
-      password: z.string().min(8).max(40).default('admin12345')
-    })
+      password: z.string().min(8).max(40).default('admin12345'),
+    }),
   })
   .readonly()
 
@@ -62,7 +62,7 @@ const config = schema.parse({
   admin: {
     email: env.ADMIN_EMAIL,
     password: env.INITIAL_ADMIN_PASSWORD,
-  }
+  },
 })
 
 export default config
