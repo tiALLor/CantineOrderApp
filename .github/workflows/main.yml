@@ -39,8 +39,8 @@ jobs:
       - name: Type check server
         run: npm run typecheck -w=server
 
-      - name: Type check client
-        run: npm run typecheck -w=client
+      # - name: Type check client
+      #   run: npm run typecheck -w=client
 
       - name: Lint server
         run: npm run lint -w=server

@@ -3,13 +3,13 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { AuthUserWithRoleName, UserInsertable } from '@server/shared/types'
 
-export const userAuthStore = defineStore('auth', () => {
-  const accessToken = ref<string | null>(null)
+export const useUserAuthStore = defineStore('auth', () => {
+  const authToken = ref<string | null>(null)
   const authUser = computed<AuthUserWithRoleName | null>(() => {
-    if (!accessToken.value) return null
+    if (!authToken.value) return null
 
     try {
-      const payload = JSON.parse(Buffer.from(accessToken.value.split('.')[1], 'base64').toString())
+      const payload = JSON.parse(Buffer.from(authToken.value.split('.')[1], 'base64').toString())
       return payload.user as AuthUserWithRoleName
     } catch {
       return null
@@ -17,21 +17,26 @@ export const userAuthStore = defineStore('auth', () => {
   })
 
   const authUserId = computed(() => authUser.value?.id ?? null)
-  const authUserRole = computed(() => authUser.value?.role ?? null)
+  const authUserRole = computed(() => authUser.value?.roleName ?? null)
+
+  const isLoggedIn = computed(() => !!authToken.value)
 
   async function login(userLogin: { email: string; password: string }) {
-    accessToken.value = await trpc.user.login.mutate(userLogin)
+    const result = await trpc.user.login.mutate(userLogin)
+
+    authToken.value = result.accessToken
   }
 
   function logout() {
-    accessToken.value = null
+    authToken.value = null
   }
 
   return {
-    accessToken,
+    authToken,
     authUser,
     authUserId,
     authUserRole,
+    isLoggedIn,
     login,
     logout,
   }

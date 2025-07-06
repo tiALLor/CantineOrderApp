@@ -27,7 +27,7 @@ const validDate = new Date(dateAsString)
 const anotherDateAsString = format(addDays(new Date(), 2), 'yyyy-MM-dd')
 const anotherValidDate = new Date(anotherDateAsString)
 
-const [menuOne, menuTwo] = await insertAll(db, 'menu', [
+await insertAll(db, 'menu', [
   fakeMenu({ date: validDate, mealId: mealOne.id }),
   fakeMenu({ date: validDate, mealId: mealTwo.id }),
   fakeMenu({ date: anotherValidDate, mealId: mealTree.id }),
