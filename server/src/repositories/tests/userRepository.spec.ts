@@ -14,7 +14,7 @@ const [userOne, userTwo] = await insertAll(db, 'user', [
 
 describe('create user', () => {
   it('should create user', async () => {
-    const record = fakeUser()
+    const record = fakeUser({ id: 10 })
 
     const user = await repository.create(record)
 
@@ -32,13 +32,7 @@ describe('create user', () => {
 
   it('should throw a error in case of not existing roleId', async () => {
     const record = fakeUser({
-      roleId: 999999,
-    })
-    await expect(() => repository.create(record)).rejects.toThrow(/role_id/i)
-  })
-
-  it('should throw a error in case of not existing ', async () => {
-    const record = fakeUser({
+      id: 11,
       roleId: 999999,
     })
     await expect(() => repository.create(record)).rejects.toThrow(/role_id/i)
