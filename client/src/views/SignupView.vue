@@ -10,8 +10,8 @@ import AlertError from '@/components/AlertError.vue'
 const userForm = ref({
   email: '',
   password: '',
-  firstName: '',
-  lastName: '',
+  name: '',
+  roleId: 3,
 })
 
 const hasSucceeded = ref(false)
@@ -48,20 +48,20 @@ async function submitSignup() {
   <PageForm heading="Sign up for an account" formLabel="Signup" @submit="submitSignup">
     <template #default>
       <FwbInput
-        data-testid="firstName"
-        label="First Name"
+        data-testid="name"
+        label="Name"
         type="text"
-        v-model="userForm.firstName"
+        v-model="userForm.name"
         :required="true"
       />
 
-      <FwbInput
+      <!-- <FwbInput
         data-testid="lastName"
         label="Last Name"
         type="text"
         v-model="userForm.lastName"
         :required="true"
-      />
+      /> -->
 
       <FwbInput
         label="Email"

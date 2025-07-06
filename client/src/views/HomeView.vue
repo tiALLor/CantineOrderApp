@@ -3,7 +3,9 @@ import { ref, onMounted } from 'vue'
 import type { ArticlePublic } from '@server/shared/types'
 import { FwbButton } from 'flowbite-vue'
 import ArticleCard from '@/components/ArticleCard.vue'
-import { isLoggedIn } from '@/stores/user'
+import { useUserAuthStore } from '@/stores/user'
+
+const userAuthStore = useUserAuthStore()
 
 const articles = ref<ArticlePublic[]>([])
 
@@ -39,7 +41,7 @@ onMounted(fetchArticles)
 
 <template>
   <div class="container mx-auto px-4 py-8">
-    <div v-if="!isLoggedIn" class="items-center lg:flex">
+    <div v-if="!userAuthStore.isLoggedIn" class="items-center lg:flex">
       <div class="lg:w-1/2">
         <h2 class="text-4xl font-bold text-gray-800 dark:text-gray-100">Open blogging platform</h2>
         <p class="mt-4 text-gray-500 dark:text-gray-400 lg:max-w-md">
