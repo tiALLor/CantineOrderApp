@@ -7,7 +7,10 @@ import { userRepository } from '../userRepository'
 const db = await wrapInRollbacks(createTestDatabase())
 const repository = userRepository(db)
 
-const [userOne, userTwo] = await insertAll(db, 'user', [fakeUser(), fakeUser()])
+const [userOne, userTwo] = await insertAll(db, 'user', [
+  fakeUser({ id: 2 }),
+  fakeUser({ id: 3 }),
+])
 
 describe('create user', () => {
   it('should create user', async () => {
