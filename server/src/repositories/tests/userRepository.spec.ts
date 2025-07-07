@@ -7,8 +7,12 @@ import { userRepository } from '../userRepository'
 const db = await wrapInRollbacks(createTestDatabase())
 const repository = userRepository(db)
 
-afterEach(() => {
-  db.deleteFrom('user')
+beforeEach(async () => {
+
+  await db.deleteFrom('order').execute()
+  await db.deleteFrom('menu').execute()
+  await db.deleteFrom('meal').execute()
+  await db.deleteFrom('user').execute()
 })
 
 describe('create user', () => {
