@@ -11,6 +11,7 @@ const createCaller = createCallerFactory(userRouter)
 
 const { login } = createCaller({ db })
 
+// change to create user and avoid use of hash password or has password
 const PASSWORD_CORRECT = 'Password.098'
 const HASH_PASSWORD_CORRECT =
   '$2b$06$vVzb1rxY78ey7LQXCgP./OcESNvYX3hfa60e4eROZEgeCBktYH1ua'

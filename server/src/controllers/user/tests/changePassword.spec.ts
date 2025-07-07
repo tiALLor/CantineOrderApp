@@ -14,6 +14,7 @@ const PASSWORD_CORRECT = 'Password.098'
 const HASH_PASSWORD_CORRECT =
   '$2b$06$vVzb1rxY78ey7LQXCgP./OcESNvYX3hfa60e4eROZEgeCBktYH1ua'
 
+// change to create user and avoid use of hash password or has password
 const [userOne] = await insertAll(db, 'user', [
   fakeUser({ password: HASH_PASSWORD_CORRECT }),
 ])
