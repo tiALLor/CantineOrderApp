@@ -4,6 +4,7 @@ import { createTestDatabase } from '@tests/utils/database'
 import { insertAll } from '@tests/utils/records'
 import { fakeUser } from '@server/entities/tests/fakes'
 import userRouter from '@server/controllers/user'
+import { getPasswordHash } from '@server/hash'
 
 const db = await wrapInRollbacks(createTestDatabase())
 
@@ -11,10 +12,11 @@ const createCaller = createCallerFactory(userRouter)
 
 const { login } = createCaller({ db })
 
-// change to create user and avoid use of hash password or has password
 const PASSWORD_CORRECT = 'Password.098'
-const HASH_PASSWORD_CORRECT =
-  '$2b$06$vVzb1rxY78ey7LQXCgP./OcESNvYX3hfa60e4eROZEgeCBktYH1ua'
+// const HASH_PASSWORD_CORRECT =
+//   '$2b$06$vVzb1rxY78ey7LQXCgP./OcESNvYX3hfa60e4eROZEgeCBktYH1ua'
+
+const HASH_PASSWORD_CORRECT = await getPasswordHash(PASSWORD_CORRECT)
 
 const [userForLogging] = await insertAll(
   db,

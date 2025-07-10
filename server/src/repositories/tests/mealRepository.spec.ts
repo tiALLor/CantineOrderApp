@@ -7,6 +7,11 @@ import { mealRepository } from '../mealRepository'
 const db = await wrapInRollbacks(createTestDatabase())
 const repository = mealRepository(db)
 
+await db.deleteFrom('order').execute()
+await db.deleteFrom('menu').execute()
+await db.deleteFrom('meal').execute()
+await db.deleteFrom('user').execute()
+
 const [mealOne, mealTwo] = await insertAll(db, 'meal', [
   fakeMeal({ type: 'soup' }),
   fakeMeal({ type: 'main' }),
