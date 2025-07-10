@@ -7,6 +7,7 @@ import {
 import pg from 'pg'
 import type { DB } from './types'
 
+// override the default parser for PostgreSQL's DATE type, to return the raw string value instead of Date obj
 pg.types.setTypeParser(1082, (val) => val)
 
 export function createDatabase(options: pg.PoolConfig): Kysely<DB> {
