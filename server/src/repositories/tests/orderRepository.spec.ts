@@ -7,9 +7,12 @@ import { orderRepository } from '../orderRepository'
 const db = await wrapInRollbacks(createTestDatabase())
 const repository = orderRepository(db)
 
-const [userOne] = await insertAll(db, 'user', [
-  fakeUser({ name: 'Alice' }),
-])
+await db.deleteFrom('order').execute()
+await db.deleteFrom('menu').execute()
+await db.deleteFrom('meal').execute()
+await db.deleteFrom('user').execute()
+
+const [userOne] = await insertAll(db, 'user', [fakeUser({ name: 'Alice' })])
 
 const [mealOne, mealTwo, mealTree, mealFour] = await insertAll(db, 'meal', [
   fakeMeal({ type: 'soup', priceEur: 1 }),
