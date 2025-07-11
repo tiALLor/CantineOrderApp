@@ -2,16 +2,16 @@ version: "1.0"
 
 services:
   # spin up a database
-  postgres:
-    image: postgres:16.9-alpine
-    environment:
-      POSTGRES_USER: turing
-      POSTGRES_PASSWORD: turing
-      POSTGRES_DB: cantina
-    ports:
-      - "5432"
-    volumes:
-      - cantina-db:/var/lib/postgresql/data
+  # postgres:
+  #   image: postgres:16.9-alpine
+  #   environment:
+  #     POSTGRES_USER: turing
+  #     POSTGRES_PASSWORD: turing
+  #     POSTGRES_DB: cantina
+  #   ports:
+  #     - "5432"
+  #   volumes:
+  #     - cantina-db:/var/lib/postgresql/data
 
   # start up an API server
   server:
@@ -22,12 +22,12 @@ services:
     # env_file:
     #   - ./server/.env
     environment:
-      DATABASE_URL: postgres://turing:turing@postgres:5432/cantina
+      DATABASE_URL: "postgresql://neondb_owner:npg_FyMtWJe4mx5H@ep-wandering-smoke-a2sq83ty-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
       PORT: 3000
     ports:
       - "3000"
-    depends_on:
-      - postgres
+    # depends_on:
+    #   - postgres
 
   # start up a client (and proxy) server
   client:
