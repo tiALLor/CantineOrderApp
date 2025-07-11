@@ -1,4 +1,4 @@
-import type { Article, Comment, User } from '@server/shared/types'
+import type { User } from '@server/shared/types'
 import type { Insertable } from 'kysely'
 import { Chance } from 'chance'
 
@@ -16,18 +16,6 @@ export const random = process.env.CI ? Chance(1) : Chance()
 export const fakeUser = <T extends Insertable<User>>(overrides: Partial<T> = {} as T) => ({
   email: random.email(),
   password: 'password.123',
-  firstName: random.first(),
-  lastName: random.last(),
-  ...overrides,
-})
-
-export const fakeArticle = <T extends Partial<Insertable<Article>>>(overrides: T = {} as T) => ({
-  title: random.sentence({ words: 5 }),
-  content: random.paragraph(),
-  ...overrides,
-})
-
-export const fakeComment = <T extends Partial<Insertable<Comment>>>(overrides: T = {} as T) => ({
-  content: random.sentence({ words: 10 }),
+  name: random.last(),
   ...overrides,
 })

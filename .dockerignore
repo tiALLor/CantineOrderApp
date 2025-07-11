@@ -24,3 +24,6 @@
 # Temporary files
 **/tmp
 **/temp
+
+# AWS files
+**/container.json
