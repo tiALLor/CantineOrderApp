@@ -27,7 +27,7 @@ const schema = z
 
         throw new Error('You must provide a TOKEN_KEY in a production env!')
       }),
-      expiresIn: z.coerce.string().default('1d'),
+      expiresIn: z.coerce.string().default('1h'),
       passwordCost: z.coerce.number().default(isDevTest ? 6 : 12),
       passwordPepper: z.string().default('abc123'),
     }),
