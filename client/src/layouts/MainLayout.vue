@@ -10,10 +10,10 @@ const router = useRouter()
 const userAuthStore = useUserAuthStore()
 
 const links = computed(() => [
-  { label: 'Articles', name: 'Home' },
+  { label: 'Menu', name: 'Home' },
 
   ...(userAuthStore.isLoggedIn
-    ? [{ label: 'Write an article', name: 'WriteArticle' }]
+    ? [{ label: 'Order a menu', name: 'OrderMenu' }]
     : [
         { label: 'Login', name: 'Login' },
         { label: 'Signup', name: 'Signup' },

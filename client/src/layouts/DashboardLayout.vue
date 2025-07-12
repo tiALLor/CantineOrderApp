@@ -8,7 +8,7 @@ const router = useRouter()
 
 const userAuthStore = useUserAuthStore()
 
-const links = [{ label: 'Write an article', name: 'WriteArticle' }]
+const links = [{ label: 'Order a menu', name: 'OrderMenu' }]
 
 function logoutUser() {
   userAuthStore.logout()
