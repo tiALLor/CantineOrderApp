@@ -11,7 +11,7 @@ jobs:
       VITE_API_PATH: /api/v1/trpc
 
       # variables for our back-end tests, see server/src/config.ts
-      DATABASE_URL: postgres://fortests:cantine@localhost:5432/testdb
+      DATABASE_URL: postgres://fortests:cantina@localhost:5432/testdb
     services:
       # spin up a database for tests
       postgres:
@@ -19,7 +19,7 @@ jobs:
         env:
           # Postgres will create a database with the following credentials
           POSTGRES_USER: fortests
-          POSTGRES_PASSWORD: cantine
+          POSTGRES_PASSWORD: cantina
           POSTGRES_DB: testdb
         ports:
           - 5432:5432
