@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useUserAuthStore } from '@/stores/user'
+import { login } from '@/utils/auth'
 import { ref } from 'vue'
 import PageForm from '@/components/PageForm.vue'
 import { FwbAlert, FwbButton, FwbInput } from 'flowbite-vue'
@@ -8,21 +8,20 @@ import useErrorMessage from '@/composables/useErrorMessage'
 
 const router = useRouter()
 
-const userAuthStore = useUserAuthStore()
-
 const userForm = ref({
   email: '',
   password: '',
 })
 
 const [submitLogin, errorMessage] = useErrorMessage(async () => {
-  await userAuthStore.login(userForm.value)
+  await login(userForm.value)
 
   // Support redirects back to the page the user was on before logging in
   // if it is provided in the query string:
   // :to="/login?redirect=/some-page-to-go/after-login"
+  // TODO: correct redirection to home
   const redirectTo = (router.currentRoute.value.query.redirect as string) ?? {
-    name: 'WriteArticle',
+    name: 'Menu',
   }
 
   router.push(redirectTo)

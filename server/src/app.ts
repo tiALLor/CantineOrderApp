@@ -6,11 +6,11 @@ import {
 import cors from 'cors'
 import { renderTrpcPanel } from 'trpc-panel'
 import morganMiddleware from 'middleware/morganMiddleware'
+import logger from './utils/logger'
 import type { Database } from './database'
 import { appRouter } from './controllers'
 import type { Context } from './trpc'
 import config from './config'
-import logger from './utils/logger'
 
 export default function createApp(db: Database) {
   const app = express()
