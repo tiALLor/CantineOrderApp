@@ -1,17 +1,15 @@
 <script setup lang="ts">
 import { FwbNavbarLink } from 'flowbite-vue'
 import StackedLayout from './StackedLayout.vue'
-import { useUserAuthStore } from '@/stores/user'
+import { logout } from '@/utils/auth'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-const userAuthStore = useUserAuthStore()
-
 const links = [{ label: 'Order a menu', name: 'OrderMenu' }]
 
 function logoutUser() {
-  userAuthStore.logout()
+  logout()
   router.push({ name: 'Login' })
 }
 </script>
