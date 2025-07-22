@@ -1,5 +1,5 @@
 import type { Kysely } from 'kysely'
-import { getPasswordHash } from '@server/hash'
+import { getPasswordHash } from '@server/utils/hash'
 import config from '@server/config'
 
 const INITIAL_ADMIN_PASSWORD_HASH = await getPasswordHash(config.admin.password)

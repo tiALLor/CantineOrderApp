@@ -12,7 +12,7 @@ const baseURL = pathToFileURL(cwd() + '/').href
 
 /**
  * Node's ESM specifier resolution that allows importing ESModules
- * with CommonJS moduile resolution.
+ * with CommonJS module resolution.
  * Node provides this example in a GitHub repo:
  * https://github.com/nodejs/loaders-test/tree/main/commonjs-extension-resolution-loader
  * MIT License. https://github.com/nodejs/loaders-test/blob/main/LICENSE

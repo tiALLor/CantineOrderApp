@@ -5,10 +5,12 @@ import {
 } from '@trpc/server/adapters/express'
 import cors from 'cors'
 import { renderTrpcPanel } from 'trpc-panel'
+import morganMiddleware from 'middleware/morganMiddleware'
 import type { Database } from './database'
 import { appRouter } from './controllers'
 import type { Context } from './trpc'
 import config from './config'
+import logger from './utils/logger'
 
 export default function createApp(db: Database) {
   const app = express()
@@ -21,6 +23,8 @@ export default function createApp(db: Database) {
   app.use('/api/health', (_, res) => {
     res.status(200).send('OK')
   })
+
+  app.use(morganMiddleware)
 
   // Using TRPC router, which will live under /api/v1/trpc
   // path. It will be used for all our procedures.
@@ -35,6 +39,18 @@ export default function createApp(db: Database) {
         req,
         res,
       }),
+      onError({ error, path, type, input, ctx }) {
+        logger.error('tRPC error', {
+          message: error.message,
+          code: error.code,
+          path,
+          type,
+          input,
+          cause: error.cause,
+          stack: error.stack,
+          user: ctx?.authUser?.id,
+        })
+      },
 
       // all routes
       router: appRouter,

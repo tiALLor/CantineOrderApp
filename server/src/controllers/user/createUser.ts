@@ -5,7 +5,7 @@ import { adminAuthProcedure } from '@server/trpc/adminAuthProcedure'
 import provideRepos from '@server/trpc/provideRepos'
 import { TRPCError } from '@trpc/server'
 import { assertError } from '@server/utils/errors'
-import { getPasswordHash } from '@server/hash'
+import { getPasswordHash } from '@server/utils/hash'
 
 export default adminAuthProcedure
   .use(provideRepos({ userRepository, roleRepository }))

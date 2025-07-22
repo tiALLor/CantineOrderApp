@@ -1,3 +1,4 @@
+import * as path from 'node:path'
 import { initTRPC } from '@trpc/server'
 import type { Request, Response } from 'express'
 import type { AuthUserWithRoleName } from '@server/entities/user'
@@ -6,6 +7,7 @@ import SuperJSON from 'superjson'
 import { ZodError } from 'zod'
 import { fromZodError } from 'zod-validation-error'
 import type { Repositories } from '@server/repositories'
+import logger from '@server/utils/logger'
 
 export type Context = {
   db: Database
@@ -32,6 +34,13 @@ export const t = initTRPC.context<Context>().create({
 
     if (error.cause instanceof ZodError) {
       const validationError = fromZodError(error.cause)
+      logger.warn('Zod validation failed', {
+        path,
+        code: error.code,
+        message: validationError.message,
+        issues: error.cause.errors,
+        details: validationError.details,
+      })
 
       return {
         ...shape,

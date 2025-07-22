@@ -4,7 +4,7 @@ import { createTestDatabase } from '@tests/utils/database'
 import { insertAll } from '@tests/utils/records'
 import { fakeUser } from '@server/entities/tests/fakes'
 import userRouter from '@server/controllers/user'
-import { getPasswordHash } from '@server/hash'
+import { getPasswordHash } from '@server/utils/hash'
 
 const db = await wrapInRollbacks(createTestDatabase())
 

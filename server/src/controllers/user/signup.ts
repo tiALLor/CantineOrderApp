@@ -4,7 +4,7 @@ import { publicProcedure } from '@server/trpc'
 import provideRepos from '@server/trpc/provideRepos'
 import { TRPCError } from '@trpc/server'
 import { assertError } from '@server/utils/errors'
-import { getPasswordHash } from '@server/hash'
+import { getPasswordHash } from '@server/utils/hash'
 
 // remove roleId from input and adjust the tests
 export default publicProcedure

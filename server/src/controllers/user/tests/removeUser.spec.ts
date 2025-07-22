@@ -6,7 +6,7 @@ import { fakeUser } from '@server/entities/tests/fakes'
 import { authContext } from '@tests/utils/context'
 import { authUserSchemaWithRoleName } from '@server/entities/user'
 import userRouter from '@server/controllers/user'
-import { getPasswordHash } from '@server/hash'
+import { getPasswordHash } from '@server/utils/hash'
 
 const db = await wrapInRollbacks(createTestDatabase())
 const createCaller = createCallerFactory(userRouter)
