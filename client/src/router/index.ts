@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import MainLayout from '@/layouts/MainLayout.vue'
-// import { authenticate } from './guards'
+// import { authenticateUser, authenticateChef, authenticateAdmin } from './guards'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -9,7 +9,7 @@ const router = createRouter({
     // {
     //   path: '/dashboard',
     //   component: MainLayout,
-    //   beforeEnter: [authenticate],
+    //   beforeEnter: [authenticateUser],
     //   children: [
     //     {
     //       path: 'write-article',

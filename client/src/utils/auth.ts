@@ -2,7 +2,6 @@ import { trpc } from '@/trpc'
 import type { AuthUserWithRoleName, UserInsertable } from '@server/shared/types'
 import { useUserAuthStore } from '@/stores/user'
 
-const userAuthStore = useUserAuthStore()
 
 export async function signup(userForm: UserInsertable): Promise<void> {
   await trpc.user.signup.mutate(userForm)
@@ -11,6 +10,7 @@ export async function signup(userForm: UserInsertable): Promise<void> {
 export async function login(userLogin: { email: string; password: string }) {
   const result = await trpc.user.login.mutate(userLogin)
   const authToken = result.accessToken
+  const userAuthStore = useUserAuthStore()
 
   if (!authToken) {
     // TODO: check Error handling
@@ -30,5 +30,6 @@ export async function login(userLogin: { email: string; password: string }) {
 }
 
 export function logout() {
+  const userAuthStore = useUserAuthStore()
   userAuthStore.clearTokenAndUser()
 }

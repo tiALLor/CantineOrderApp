@@ -2,6 +2,7 @@
 import { FwbNavbarLink } from 'flowbite-vue'
 import StackedLayout from './StackedLayout.vue'
 import { useUserAuthStore } from '@/stores/user'
+import { logout } from '@/utils/auth'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -21,7 +22,7 @@ const links = computed(() => [
 ])
 
 function logoutUser() {
-  userAuthStore.logout()
+  logout()
   router.push({ name: 'Login' })
 }
 </script>

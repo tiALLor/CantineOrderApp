@@ -4,8 +4,6 @@ import { apiBase } from '@/config'
 import SuperJSON from 'superjson'
 import { useUserAuthStore } from '@/stores/user'
 
-const userAuthStore = useUserAuthStore()
-
 export const trpc = createTRPCProxyClient<AppRouter>({
   // auto convert Date <-> string
   transformer: SuperJSON,
@@ -16,6 +14,7 @@ export const trpc = createTRPCProxyClient<AppRouter>({
       // send the access token with every request
       headers: () => {
         // TODO: attach the access token to the request Authorization header
+        const userAuthStore = useUserAuthStore()
         const accessToken = userAuthStore.authToken
         return accessToken ? { Authorization: `Bearer ${accessToken}` } : {}
       },
