@@ -1,1 +1,1 @@
-export { type Role } from '../entities/role'
+export { ROLES } from '@server/entities/role'

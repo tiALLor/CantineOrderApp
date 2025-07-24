@@ -5,7 +5,7 @@ import PageForm from '@/components/PageForm.vue'
 import { FwbAlert, FwbInput, FwbSelect, FwbButton } from 'flowbite-vue'
 import AlertError from '@/components/AlertError.vue'
 import useErrorMessage from '@/composables/useErrorMessage'
-import { type Role } from '@server/shared/role'
+import type { EntityRole } from '@server/shared/types'
 
 const ROLES = ['admin', 'chef', 'user'] as const
 
@@ -28,7 +28,7 @@ const [submitCreateUser, errorMessage] = useErrorMessage(async () => {
   // await trpc.user.createUser.mutate(userForm.value)
   await trpc.user.createUser.mutate({
     ...userForm.value,
-    roleName: userForm.value.roleName as Role,
+    roleName: userForm.value.roleName as EntityRole,
   })
 
   hasSucceeded.value = true
