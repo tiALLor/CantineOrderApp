@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import MainLayout from '@/layouts/MainLayout.vue'
-// import { authenticateUser, authenticateChef, authenticateAdmin } from './guards'
+import { authenticateUser, authenticateChef, authenticateAdmin } from './guards'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,16 +18,16 @@ const router = createRouter({
     //     },
     //   ],
     // },
-    {
-      path: '/login',
-      name: 'Login',
-      component: () => import('../views/LoginView.vue'),
-    },
-    {
-      path: '/signup',
-      name: 'Signup',
-      component: () => import('../views/SignupView.vue'),
-    },
+    // {
+    //   path: '/login',
+    //   name: 'Login',
+    //   component: () => import('../views/LoginView.vue'),
+    // },
+    // {
+    //   path: '/signup',
+    //   name: 'Signup',
+    //   component: () => import('../views/SignupView.vue'),
+    // },
     {
       path: '',
       component: MainLayout,
@@ -36,6 +36,28 @@ const router = createRouter({
           path: '',
           name: 'Home',
           component: HomeView,
+        },
+        {
+          path: '/login',
+          name: 'Login',
+          component: () => import('../views/LoginView.vue'),
+        },
+        {
+          path: '/signup',
+          name: 'Signup',
+          component: () => import('../views/SignupView.vue'),
+        },
+      ],
+    },
+    {
+      path: '',
+      component: MainLayout,
+      beforeEnter: [authenticateAdmin],
+      children: [
+        {
+          path: '/createUser',
+          name: 'CreateUser',
+          component: () => import('../views/CreateUser.vue'),
         },
       ],
     },

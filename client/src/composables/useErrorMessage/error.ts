@@ -22,6 +22,7 @@ export async function handleError(errorMessage: Ref<string>, fn: Function, doRet
     return result
   } catch (error) {
     errorMessage.value = getErrorMessage(error)
+    console.log(errorMessage.value)
 
     if (doRethrow) throw error
   }
@@ -48,5 +49,5 @@ function getErrorMessage(error: unknown) {
     return error.message
   }
 
-  return error.data.message || error.message
+   return error.data?.message || error.message
 }

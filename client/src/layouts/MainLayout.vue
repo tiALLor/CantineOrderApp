@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FwbNavbarLink } from 'flowbite-vue'
+import { FwbNavbarLink, FwbButton } from 'flowbite-vue'
 import StackedLayout from './StackedLayout.vue'
 import { useUserAuthStore } from '@/stores/user'
 import { logout } from '@/utils/auth'
@@ -11,14 +11,29 @@ const router = useRouter()
 const userAuthStore = useUserAuthStore()
 
 const links = computed(() => [
-  { label: 'Menu', name: 'Home' },
+  { label: 'Home', name: 'Home' },
 
   ...(userAuthStore.isLoggedIn
-    ? [{ label: 'Order a menu', name: 'OrderMenu' }]
+    ? [
+        // { label: 'Monthly costs', name: 'Costs' },
+        // { label: 'Account settings', name: 'AccountSettings' },
+      ]
     : [
         { label: 'Login', name: 'Login' },
         { label: 'Signup', name: 'Signup' },
       ]),
+  ...(userAuthStore.authUser?.roleName === 'admin'
+    ? [{ label: 'Create user', name: 'CreateUser' }]
+    : []),
+
+  // ...(userAuthStore.authUser?.roleName === 'chef'
+  //   ? [
+  //       { label: 'Create menu', name: 'CreateMenu' },
+  //       { label: 'Manage menu', name: 'ManageMenu' },
+  //       { label: 'Create meal', name: 'CreateMeal' },
+  //       { label: 'Manage meals', name: 'ManageMeal' },
+  //     ]
+  //   : []),
 ])
 
 function logoutUser() {
@@ -33,6 +48,9 @@ function logoutUser() {
       <FwbNavbarLink v-if="userAuthStore.isLoggedIn" @click.prevent="logoutUser" link="#"
         >Logout</FwbNavbarLink
       >
+    </template>
+    <template #right-side>
+      <fwb-button v-if="userAuthStore.isLoggedIn" @click.prevent="logoutUser">Logout</fwb-button>
     </template>
   </StackedLayout>
 </template>

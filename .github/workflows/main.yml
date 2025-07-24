@@ -190,7 +190,10 @@ jobs:
                 "NODE_ENV": "production",
                 "PORT": "3000",
                 "DATABASE_URL": "${{ secrets.PROD_DATABASE_URL }}",
-                "TOKEN_KEY": "${{ secrets.PROD_TOKEN_KEY }}"
+                "TOKEN_KEY": "${{ secrets.PROD_TOKEN_KEY }}",
+                "ADMIN_EMAIL": "${{ secrets.PROD_ADMIN_EMAIL }}",
+                "INITIAL_ADMIN_PASSWORD": "${{ secrets.PROD_INITIAL_ADMIN_PASSWORD }}",
+                "EXPIRES_IN": "${{ vars.PROD_EXPIRES_IN }}"
               }
             }
           }' > containers.json

@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import { z } from 'zod'
+import { testUser } from './shared/forTests'
 
 const { env } = process
 
@@ -37,8 +38,30 @@ const schema = z
     }),
 
     admin: z.object({
-      email: z.string().email().toLowerCase().default('admin@email.com'),
-      password: z.string().min(8).max(40).default('admin12345'),
+      email: z
+        .string()
+        .email()
+        .toLowerCase()
+        .default(() => {
+          if (isDevTest) {
+            return testUser.email
+          }
+
+          throw new Error('You must provide a ADMIN_EMAIL in a production env!')
+        }),
+      password: z
+        .string()
+        .min(8)
+        .max(40)
+        .default(() => {
+          if (isDevTest) {
+            return testUser.email
+          }
+
+          throw new Error(
+            'You must provide a INITIAL_ADMIN_PASSWORD in a production env!'
+          )
+        }),
     }),
   })
   .readonly()
