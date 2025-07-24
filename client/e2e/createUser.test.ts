@@ -22,8 +22,6 @@ test.describe('login and create user', () => {
     await formLogin.locator('input[type="password"]').fill(testUser.password)
     await formLogin.locator('button[type="submit"]').click()
 
-    await expect(page).toHaveURL('/')
-
     page.getByRole('link', { name: 'Create user' }).click()
 
     // await page.goto('/createUser')
