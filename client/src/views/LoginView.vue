@@ -21,7 +21,7 @@ const [submitLogin, errorMessage] = useErrorMessage(async () => {
   // :to="/login?redirect=/some-page-to-go/after-login"
   // TODO: correct redirection to home
   const redirectTo = (router.currentRoute.value.query.redirect as string) ?? {
-    name: 'Menu',
+    name: 'Home',
   }
 
   router.push(redirectTo)

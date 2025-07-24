@@ -1,30 +1,46 @@
 <script lang="ts" setup>
-import { signup } from '@/utils/auth'
+import { trpc } from '@/trpc'
 import { ref } from 'vue'
 import PageForm from '@/components/PageForm.vue'
-import { FwbAlert, FwbButton, FwbInput } from 'flowbite-vue'
+import { FwbAlert, FwbInput, FwbSelect, FwbButton } from 'flowbite-vue'
 import AlertError from '@/components/AlertError.vue'
 import useErrorMessage from '@/composables/useErrorMessage'
+import { type Role } from '@server/shared/role'
+
+const ROLES = ['admin', 'chef', 'user'] as const
+
+const roles = ROLES.map((role) => ({
+  value: role,
+  name: role.charAt(0).toUpperCase() + role.slice(1),
+}))
 
 const userForm = ref({
   email: '',
   password: '',
   name: '',
-  roleId: 3,
+  roleName: '',
 })
 
 const hasSucceeded = ref(false)
 
 // function, which creates an error message ref and handles the try/catch block
-const [submitSignup, errorMessage] = useErrorMessage(async () => {
-  await signup(userForm.value)
+const [submitCreateUser, errorMessage] = useErrorMessage(async () => {
+  // await trpc.user.createUser.mutate(userForm.value)
+  await trpc.user.createUser.mutate({
+    ...userForm.value,
+    roleName: userForm.value.roleName as Role,
+  })
 
   hasSucceeded.value = true
 })
 </script>
 
 <template>
-  <PageForm heading="Sign up for an account" formLabel="Signup" @submit="submitSignup">
+  <PageForm
+    heading="Create user account for cantina use"
+    formLabel="Create"
+    @submit="submitCreateUser"
+  >
     <template #default>
       <FwbInput
         data-testid="name"
@@ -52,34 +68,28 @@ const [submitSignup, errorMessage] = useErrorMessage(async () => {
         :required="true"
       />
 
+      <FwbSelect
+        data-testid="roleName"
+        :options="roles"
+        label="Select users role"
+        v-model="userForm.roleName"
+        :required="true"
+      />
+
       <FwbAlert v-if="hasSucceeded" data-testid="successMessage" type="success">
-        You have successfully signed up! You can now log in.
-        <RouterLink
-          to="/login"
-          class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
-          >Go to the login page</RouterLink
-        >
+        You have successfully created a new user.
       </FwbAlert>
       <AlertError :message="errorMessage">
         {{ errorMessage }}
       </AlertError>
-
       <div class="grid">
-        <FwbButton color="default" type="submit" size="xl">Sign up</FwbButton>
+        <FwbButton color="default" type="submit" size="xl">Create</FwbButton>
       </div>
     </template>
 
     <template #footer>
       <FwbAlert class="bg-transparent text-center">
-        Already a member?
-        {{ ' ' }}
-        <RouterLink
-          to="/login"
-          class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
-          >Log in</RouterLink
-        >
-        <br />
-        or go
+        Create another user or go
         <RouterLink to="/" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
           back home
         </RouterLink>

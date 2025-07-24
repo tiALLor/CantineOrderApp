@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { FwbNavbar, FwbNavbarCollapse, FwbNavbarLink } from 'flowbite-vue'
+import { FwbNavbar, FwbNavbarCollapse, FwbNavbarLink, FwbNavbarLogo } from 'flowbite-vue'
 
 const { links } = defineProps<{
   links: {
@@ -22,22 +22,25 @@ const navigation = computed(() =>
 
 <template>
   <FwbNavbar>
+    <template #logo>
+      <fwb-navbar-logo alt="Cantina logo" image-url="/icons8-meal-100.png" link="#">
+        Cantina
+      </fwb-navbar-logo>
+    </template>
     <template #default="{ isShowMenu }">
-      <div class="px-4">
-        <FwbNavbar-collapse :isShowMenu="isShowMenu">
-          <FwbNavbarLink
-            v-for="link in navigation"
-            :key="`${link.name}-${String(route.name)}`"
-            :is-active="link.isActive"
-            :link="{ name: link.name } as any"
-            link-attr="to"
-            component="RouterLink"
-          >
-            {{ link.label }}
-          </FwbNavbarLink>
-          <slot name="menu" />
-        </FwbNavbar-collapse>
-      </div>
+      <FwbNavbar-collapse :isShowMenu="isShowMenu">
+        <FwbNavbarLink
+          v-for="link in navigation"
+          :key="`${link.name}-${String(route.name)}`"
+          :is-active="link.isActive"
+          :link="{ name: link.name } as any"
+          link-attr="to"
+          component="RouterLink"
+        >
+          {{ link.label }}
+        </FwbNavbarLink>
+        <slot name="menu" />
+      </FwbNavbar-collapse>
     </template>
   </FwbNavbar>
 
