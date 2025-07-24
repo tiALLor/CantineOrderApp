@@ -55,7 +55,7 @@ const schema = z
         .max(40)
         .default(() => {
           if (isDevTest) {
-            return testUser.email
+            return testUser.password
           }
 
           throw new Error(
