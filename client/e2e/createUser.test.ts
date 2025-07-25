@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { fakeUser } from 'utils/fakeData'
+// import testUser with admin role
 import { testUser } from '@server/shared/forTests'
 
 const user = fakeUser()

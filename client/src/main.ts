@@ -2,6 +2,7 @@ import './assets/style.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { useUserAuthStore } from './stores/user'
 
 import App from './App.vue'
 import router from './router'
@@ -12,3 +13,8 @@ app.use(createPinia())
 app.use(router)
 
 app.mount('#app')
+
+if (typeof window !== 'undefined' && import.meta.env.MODE === 'development') {
+  // @ts-ignore
+  window.userAuthStore = useUserAuthStore()
+}

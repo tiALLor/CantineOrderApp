@@ -61,6 +61,18 @@ const router = createRouter({
         },
       ],
     },
+    {
+      path: '',
+      component: MainLayout,
+      beforeEnter: [authenticateUser],
+      children: [
+        {
+          path: '/accountSettings',
+          name: 'AccountSettings',
+          component: () => import('../views/AccountSettings.vue'),
+        },
+      ],
+    },
   ],
 })
 

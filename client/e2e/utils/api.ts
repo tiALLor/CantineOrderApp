@@ -4,8 +4,26 @@ import type { AppRouter } from '@server/shared/trpc'
 import { fakeUser } from './fakeData'
 import type { Page } from '@playwright/test'
 import superjson from 'superjson'
+// import testUser with admin role
+import { testUser } from '@server/shared/forTests'
 
 let accessToken: string | null = null
+
+function setAccessToken(token: string | null) {
+  accessToken = token
+}
+
+declare global {
+  interface Window {
+    userAuthStore: {
+      storeTokenAndUser: (
+        accessToken: string,
+        user: { id: number; name: string; roleName: string }
+      ) => void
+      isLoggedIn: boolean
+    }
+  }
+}
 
 export const trpc = createTRPCProxyClient<AppRouter>({
   transformer: superjson,
@@ -21,8 +39,24 @@ export const trpc = createTRPCProxyClient<AppRouter>({
   ],
 })
 
+type UserCreate = Parameters<typeof trpc.user.createUser.mutate>[0]
+
+export async function signInUser(userData: UserCreate = fakeUser()): Promise<void> {
+  const loginResponse = await trpc.user.login.mutate(testUser)
+
+  setAccessToken(loginResponse.accessToken)
+  try {
+    await trpc.user.createUser.mutate(userData)
+  } catch (error) {
+    // ignore cases when user already exists
+    // console.log(error)
+  }
+
+  setAccessToken(null)
+}
+
 type UserLogin = Parameters<typeof trpc.user.login.mutate>[0]
-type UserLoginAuthed = UserLogin & { id: number; accessToken: string }
+type UserLoginAuthed = UserLogin & { id: number; name: string; accessToken: string }
 
 /**
  * Logs in a new user by signing them up and logging them in with the provided
@@ -33,14 +67,17 @@ export async function loginNewUser(userLogin: UserLogin = fakeUser()): Promise<U
     await trpc.user.signup.mutate(userLogin)
   } catch (error) {
     // ignore cases when user already exists
+    // console.log(error)
   }
 
   const loginResponse = await trpc.user.login.mutate(userLogin)
   const userId = JSON.parse(atob(loginResponse.accessToken.split('.')[1])).user.id
+  const userName = JSON.parse(atob(loginResponse.accessToken.split('.')[1])).user.name
 
   return {
     ...userLogin,
     id: userId,
+    name: userName,
     accessToken: loginResponse.accessToken,
   }
 }
@@ -66,14 +103,16 @@ export async function asUser<T extends any>(
   // implementation details here, but as long as we make sure that
   // this logic is in one place and it does not spill into tests,
   // we should be fine.
-  accessToken = user.accessToken
   await page.evaluate(
-    ({ accessToken }) => {
-      localStorage.setItem('token', accessToken)
+    ({ accessToken, user }) => {
+      window.userAuthStore.storeTokenAndUser(accessToken, {
+        id: user.id,
+        name: user.name,
+        roleName: 'user',
+      })
     },
-    { accessToken }
+    { accessToken: user.accessToken, user }
   )
-
   const callbackResult = await callback(user)
 
   await page.evaluate(() => {

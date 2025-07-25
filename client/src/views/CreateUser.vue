@@ -1,9 +1,10 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { trpc } from '@/trpc'
 import { ref } from 'vue'
 import PageForm from '@/components/PageForm.vue'
 import { FwbAlert, FwbInput, FwbSelect, FwbButton } from 'flowbite-vue'
-import AlertError from '@/components/AlertError.vue'
+import StdFooter from '@/components/StdFooter.vue'
+import AlertMessages from '@/components/AlertMessages.vue'
 import useErrorMessage from '@/composables/useErrorMessage'
 import type { EntityRole } from '@server/shared/types'
 
@@ -25,7 +26,6 @@ const hasSucceeded = ref(false)
 
 // function, which creates an error message ref and handles the try/catch block
 const [submitCreateUser, errorMessage] = useErrorMessage(async () => {
-  // await trpc.user.createUser.mutate(userForm.value)
   await trpc.user.createUser.mutate({
     ...userForm.value,
     roleName: userForm.value.roleName as EntityRole,
@@ -76,12 +76,12 @@ const [submitCreateUser, errorMessage] = useErrorMessage(async () => {
         :required="true"
       />
 
-      <FwbAlert v-if="hasSucceeded" data-testid="successMessage" type="success">
-        You have successfully created a new user.
-      </FwbAlert>
-      <AlertError :message="errorMessage">
-        {{ errorMessage }}
-      </AlertError>
+      <AlertMessages
+        :showSuccess="hasSucceeded"
+        successMessage="You have successfully created a new user."
+        :errorMessage="errorMessage"
+      />
+
       <div class="grid">
         <FwbButton color="default" type="submit" size="xl">Create</FwbButton>
       </div>
@@ -89,10 +89,7 @@ const [submitCreateUser, errorMessage] = useErrorMessage(async () => {
 
     <template #footer>
       <FwbAlert class="bg-transparent text-center">
-        Create another user or go
-        <RouterLink to="/" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
-          back home
-        </RouterLink>
+        <StdFooter :message="'Create another user or go'" />
       </FwbAlert>
     </template>
   </PageForm>

@@ -1,9 +1,8 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { FwbButton } from 'flowbite-vue'
 import { useUserAuthStore } from '@/stores/user'
 
 const userAuthStore = useUserAuthStore()
-
 </script>
 
 <template>
@@ -23,6 +22,5 @@ const userAuthStore = useUserAuthStore()
         </div>
       </div>
     </div>
-
   </div>
 </template>

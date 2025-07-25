@@ -6,10 +6,6 @@ export const useUserAuthStore = defineStore('auth', () => {
   const authToken = ref<string | null>(null)
   const authUser = ref<AuthUserWithRoleName | null>(null)
 
-  // TODO: clear unused parameters
-  // const authUserId = computed(() => authUser.value?.id ?? null)
-  // const authUserRole = computed(() => authUser.value?.roleName ?? null)
-
   const isLoggedIn = computed(() => !!authToken.value)
 
   function storeTokenAndUser(token: string | null, user: AuthUserWithRoleName | null) {

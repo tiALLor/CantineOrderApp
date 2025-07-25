@@ -17,5 +17,6 @@ export const fakeUser = <T extends Insertable<User>>(overrides: Partial<T> = {} 
   email: random.email(),
   password: 'password.123',
   name: random.last(),
+  roleName: 'user' as const,
   ...overrides,
 })

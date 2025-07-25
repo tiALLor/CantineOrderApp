@@ -13,15 +13,6 @@ const userAuthStore = useUserAuthStore()
 const links = computed(() => [
   { label: 'Home', name: 'Home' },
 
-  ...(userAuthStore.isLoggedIn
-    ? [
-        // { label: 'Monthly costs', name: 'Costs' },
-        // { label: 'Account settings', name: 'AccountSettings' },
-      ]
-    : [
-        { label: 'Login', name: 'Login' },
-        { label: 'Signup', name: 'Signup' },
-      ]),
   ...(userAuthStore.authUser?.roleName === 'admin'
     ? [{ label: 'Create user', name: 'CreateUser' }]
     : []),
@@ -34,6 +25,16 @@ const links = computed(() => [
   //       { label: 'Manage meals', name: 'ManageMeal' },
   //     ]
   //   : []),
+
+  ...(userAuthStore.isLoggedIn
+    ? [
+        // { label: 'Monthly costs', name: 'Costs' },
+        { label: 'Account settings', name: 'AccountSettings' },
+      ]
+    : [
+        { label: 'Login', name: 'Login' },
+        { label: 'Signup', name: 'Signup' },
+      ]),
 ])
 
 function logoutUser() {

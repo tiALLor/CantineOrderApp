@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { signup } from '@/utils/auth'
 import { ref } from 'vue'
 import PageForm from '@/components/PageForm.vue'

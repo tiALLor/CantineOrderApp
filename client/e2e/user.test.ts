@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { fakeUser } from 'utils/fakeData'
+import { signInUser, asUser } from 'utils/api'
 
 const user = fakeUser()
 
@@ -30,5 +31,70 @@ test.describe.serial('signup and login sequence', () => {
 
     // Then (ASSERT)
     await expect(successMessage).toBeVisible()
+  })
+  // TODO: test for access without login
+
+  test('visitor can login', async ({ page }) => {
+    await page.goto('/login')
+    // When (ACT)
+    const loginForm = page.getByRole('form', { name: 'Login' })
+
+    await loginForm.locator('input[type="email"]').fill(user.email)
+    await loginForm.locator('#password').fill(user.password)
+    await loginForm.getByRole('button', { name: 'Log in' }).click()
+
+    await expect(page).toHaveURL('/')
+
+    await expect(page.getByRole('link', { name: 'Account settings' })).toBeVisible()
+  })
+})
+
+test('visitor can logout', async ({ page }) => {
+  // Given (ARRANGE)
+  const user = fakeUser()
+  await signInUser(user)
+
+  await page.goto('/login')
+  const loginForm = page.getByRole('form', { name: 'Login' })
+  await loginForm.locator('input[type="email"]').fill(user.email)
+  await loginForm.locator('#password').fill(user.password)
+  await loginForm.getByRole('button', { name: 'Log in' }).click()
+
+  await expect(page).toHaveURL('/')
+
+  const logoutLink = page.getByRole('link', { name: 'Logout' })
+
+  // When (ACT)
+  await logoutLink.click()
+
+  // Then (ASSERT)
+  await expect(logoutLink).toBeHidden()
+
+  // Ensure that we are redirected to the login page.
+  await expect(page).toHaveURL('/login')
+
+  // Refresh the page to make sure that the user is still logged out.
+  await page.goto('/')
+  await expect(logoutLink).toBeHidden()
+})
+
+test('visitor test', async ({ page }) => {
+  const user = fakeUser()
+  await asUser(page, user, async () => {
+    const logoutLink = page.getByRole('link', { name: 'Logout' })
+    await expect(logoutLink).toBeVisible()
+
+    // When (ACT)
+    await logoutLink.click()
+
+    // Then (ASSERT)
+    await expect(logoutLink).toBeHidden()
+
+    // Ensure that we are redirected to the login page.
+    await expect(page).toHaveURL('/login')
+
+    // Refresh the page to make sure that the user is still logged out.
+    await page.goto('/')
+    await expect(logoutLink).toBeHidden()
   })
 })
