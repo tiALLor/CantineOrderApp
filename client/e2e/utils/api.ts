@@ -15,7 +15,7 @@ function setAccessToken(token: string | null) {
 
 declare global {
   interface Window {
-    userAuthStore: {
+    __AUTH_STORE__: {
       storeTokenAndUser: (
         accessToken: string,
         user: { id: number; name: string; roleName: string }
@@ -105,7 +105,7 @@ export async function asUser<T extends any>(
   // we should be fine.
   await page.evaluate(
     ({ accessToken, user }) => {
-      window.userAuthStore.storeTokenAndUser(accessToken, {
+      window.__AUTH_STORE__.storeTokenAndUser(accessToken, {
         id: user.id,
         name: user.name,
         roleName: 'user',
