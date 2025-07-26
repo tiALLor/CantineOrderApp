@@ -14,7 +14,10 @@ app.use(router)
 
 app.mount('#app')
 
-const mode = import.meta.env.MODE || import.meta.env.VITE_MODE || 'production'
+const mode =
+  import.meta.env.MODE ||
+  import.meta.env.VITE_MODE || // fallback from env
+  process.env.NODE_ENV || 'production'
 
 // if (typeof window !== 'undefined' && (import.meta.env.MODE === 'development' || import.meta.env.MODE === 'test')) {
 //   const store = useUserAuthStore()
