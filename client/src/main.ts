@@ -14,10 +14,11 @@ app.use(router)
 
 app.mount('#app')
 
-if (typeof window !== 'undefined' && (import.meta.env.MODE === 'development' || import.meta.env.MODE === 'test')) {
+// if (typeof window !== 'undefined' && (import.meta.env.MODE === 'development' || import.meta.env.MODE === 'test')) {
+//   const store = useUserAuthStore()
+if (typeof window !== 'undefined') {
   const store = useUserAuthStore()
 
-  // Prevent reassigning on hot reloads
   if (!('__AUTH_STORE__' in window)) {
     ;(window as any).__AUTH_STORE__ = store
   }
