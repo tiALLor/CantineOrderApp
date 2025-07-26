@@ -14,9 +14,11 @@ app.use(router)
 
 app.mount('#app')
 
+const mode = import.meta.env.MODE || import.meta.env.VITE_MODE || 'production'
+
 // if (typeof window !== 'undefined' && (import.meta.env.MODE === 'development' || import.meta.env.MODE === 'test')) {
 //   const store = useUserAuthStore()
-if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined' && ['development', 'test'].includes(mode)) {
   const store = useUserAuthStore()
 
   if (!('__AUTH_STORE__' in window)) {

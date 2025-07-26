@@ -9,6 +9,7 @@ jobs:
       # variables for our front-end tests, see client/src/config.ts
       VITE_API_ORIGIN: http://localhost:3000
       VITE_API_PATH: /api/v1/trpc
+      VITE_MODE: test
 
       # variables for our back-end tests, see server/src/config.ts
       DATABASE_URL: postgres://fortests:cantina@localhost:5432/testdb
