@@ -14,7 +14,7 @@ app.use(router)
 
 app.mount('#app')
 
-if (typeof window !== 'undefined' && (import.meta.env.MODE === 'development' || import.meta.env.MODE === 'test' ) ) {
+if (typeof window !== 'undefined') {
   // @ts-ignore
   window.userAuthStore = useUserAuthStore()
 }
