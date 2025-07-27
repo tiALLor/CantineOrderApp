@@ -42,12 +42,12 @@ const [deleteAccount, errorMessage] = useErrorMessage(async () => {
 
       <AlertMessages
         :showSuccess="hasSucceeded"
-        successMessage="You have successfully changed the password. You have been logged out. Please login again."
+        successMessage="You have successfully deleted the account. You have been logged out."
         :errorMessage="errorMessage"
       />
 
       <div class="grid">
-        <FwbButton color="default" type="submit" size="xl">Change Password</FwbButton>
+        <FwbButton color="default" type="submit" size="xl">Delete account</FwbButton>
       </div>
     </template>
 

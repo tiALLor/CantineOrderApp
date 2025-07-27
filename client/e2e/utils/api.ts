@@ -6,6 +6,7 @@ import type { Page } from '@playwright/test'
 import superjson from 'superjson'
 // import testUser with admin role
 import { testUser } from '@server/shared/forTests'
+import type { EntityRole } from '@server/shared/types'
 
 let accessToken: string | null = null
 
@@ -56,7 +57,12 @@ export async function signInUser(userData: UserCreate = fakeUser()): Promise<voi
 }
 
 type UserLogin = Parameters<typeof trpc.user.login.mutate>[0]
-type UserLoginAuthed = UserLogin & { id: number; name: string; accessToken: string }
+type UserLoginAuthed = UserLogin & {
+  id: number
+  name: string
+  roleName: EntityRole
+  accessToken: string
+}
 
 /**
  * Logs in a new user by signing them up and logging them in with the provided
@@ -73,11 +79,13 @@ export async function loginNewUser(userLogin: UserLogin = fakeUser()): Promise<U
   const loginResponse = await trpc.user.login.mutate(userLogin)
   const userId = JSON.parse(atob(loginResponse.accessToken.split('.')[1])).user.id
   const userName = JSON.parse(atob(loginResponse.accessToken.split('.')[1])).user.name
+  const userRoleName = JSON.parse(atob(loginResponse.accessToken.split('.')[1])).user.roleName
 
   return {
     ...userLogin,
     id: userId,
     name: userName,
+    roleName: userRoleName,
     accessToken: loginResponse.accessToken,
   }
 }
@@ -108,7 +116,7 @@ export async function asUser<T extends any>(
       window.__AUTH_STORE__.storeTokenAndUser(accessToken, {
         id: user.id,
         name: user.name,
-        roleName: 'user',
+        roleName: user.roleName,
       })
     },
     { accessToken: user.accessToken, user }

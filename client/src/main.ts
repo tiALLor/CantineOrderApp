@@ -17,10 +17,9 @@ app.mount('#app')
 const mode =
   import.meta.env.MODE ||
   import.meta.env.VITE_MODE || // fallback from env
-  process.env.NODE_ENV || 'production'
+  process.env.NODE_ENV ||
+  'production'
 
-// if (typeof window !== 'undefined' && (import.meta.env.MODE === 'development' || import.meta.env.MODE === 'test')) {
-//   const store = useUserAuthStore()
 if (typeof window !== 'undefined' && ['development', 'test'].includes(mode)) {
   const store = useUserAuthStore()
 

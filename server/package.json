@@ -14,6 +14,7 @@
     "migrate:new": "tsx ./src/database/migrate/new",
     "migrate:latest": "tsx src/database/migrate/latest",
     "migrate:latest:prod": "npm run node-es dist/database/migrate/latest.js",
+    "migrate:oneDown": "tsx src/database/migrate/oneDown",
     "node-es": "node --import 'data:text/javascript,import { register } from \"node:module\"; import { pathToFileURL } from \"node:url\"; register(\"./loader.js\", pathToFileURL(\"./\"));'",
     "prod": "npm run migrate:latest:prod && npm run start",
     "start": "npm run node-es ./dist/index.js",

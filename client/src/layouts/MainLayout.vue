@@ -17,14 +17,12 @@ const links = computed(() => [
     ? [{ label: 'Create user', name: 'CreateUser' }]
     : []),
 
-  // ...(userAuthStore.authUser?.roleName === 'chef'
-  //   ? [
-  //       { label: 'Create menu', name: 'CreateMenu' },
-  //       { label: 'Manage menu', name: 'ManageMenu' },
-  //       { label: 'Create meal', name: 'CreateMeal' },
-  //       { label: 'Manage meals', name: 'ManageMeal' },
-  //     ]
-  //   : []),
+  ...(userAuthStore.authUser?.roleName === 'chef'
+    ? [
+        //       { label: 'Menu', name: 'Menu' },
+        { label: 'Meal', name: 'Meal' },
+      ]
+    : []),
 
   ...(userAuthStore.isLoggedIn
     ? [
