@@ -67,6 +67,11 @@ const router = createRouter({
       beforeEnter: [authenticateChef],
       children: [
         {
+          path: '/menu',
+          name: 'Menu',
+          component: () => import('../views/Menu.vue'),
+        },
+        {
           path: '/meal',
           name: 'Meal',
           component: () => import('../views/Meal.vue'),

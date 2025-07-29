@@ -13,7 +13,7 @@ export default chefAuthProcedure
       if (menuMeal.date <= new Date()) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
-          message: 'you can not place orders for today or past',
+          message: 'you can not create menu for today or past',
         })
       }
 

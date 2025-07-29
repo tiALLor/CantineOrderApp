@@ -19,8 +19,8 @@ const links = computed(() => [
 
   ...(userAuthStore.authUser?.roleName === 'chef'
     ? [
-        //       { label: 'Menu', name: 'Menu' },
         { label: 'Meal', name: 'Meal' },
+        { label: 'Menu', name: 'Menu' },
       ]
     : []),
 

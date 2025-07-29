@@ -25,6 +25,8 @@ const emit = defineEmits<{
 
 const hasSucceeded = ref(false)
 
+const successMessage = ref<string>()
+
 const mealForm = ref({
   name: '',
   priceEur: '',
@@ -37,6 +39,7 @@ watch(
   (isOpen) => {
     if (isOpen) {
       hasSucceeded.value = false
+      successMessage.value = undefined
       mealForm.value.name = props.mealName
       mealForm.value.priceEur = props.priceEur
       mealForm.value.type = props.type
@@ -45,12 +48,12 @@ watch(
 )
 
 const [submit, errorMessage] = useErrorMessage(async () => {
-  console.log(props.modalFunction)
-  console.log(props.mealId)
   if (props.modalFunction === 'add') {
     await trpc.meal.createMeal.mutate(mealForm.value)
+    successMessage.value = `Meal ${mealForm.value.name} created.`
   } else if (props.modalFunction === 'update' && props.mealId) {
     await trpc.meal.updateMeal.mutate({ id: props.mealId, mealData: mealForm.value })
+    successMessage.value = `Meal ${mealForm.value.name} updated.`
   } else {
     throw new Error('Internal server Error, function')
   }
@@ -93,7 +96,7 @@ const [submit, errorMessage] = useErrorMessage(async () => {
 
           <AlertMessages
             :showSuccess="hasSucceeded"
-            :successMessage="`Meal ${mealForm.name} created.`"
+            :successMessage="successMessage"
             :errorMessage="errorMessage"
           />
 
