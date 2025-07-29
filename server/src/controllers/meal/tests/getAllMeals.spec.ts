@@ -10,7 +10,7 @@ import mealRouter from '@server/controllers/meal'
 const db = await wrapInRollbacks(createTestDatabase())
 const createCaller = createCallerFactory(mealRouter)
 
-const [userOne] = await insertAll(db, 'user', [fakeUser({ roleId: 2 })])
+const [userOne] = await insertAll(db, 'user', [fakeUser({ roleId: 3 })])
 
 const [mealOne, mealTwo] = await insertAll(db, 'meal', [fakeMeal(), fakeMeal()])
 

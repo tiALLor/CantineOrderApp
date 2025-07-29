@@ -33,7 +33,6 @@ test('user as chef can create and edit a menu', async ({ page }) => {
     await expect(logoutLink).toBeVisible()
 
     // Arrange meal part
-
     const mealLink = page.getByRole('link', { name: 'Meal' })
     await mealLink.click()
 

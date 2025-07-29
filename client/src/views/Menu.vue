@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { FwbTab, FwbTabs } from 'flowbite-vue'
-import { addDays } from 'date-fns'
+import { addDays, format } from 'date-fns'
 import type { MealType } from '@server/shared/types'
 import Calendar from '@/components/Calendar.vue'
 import MenuTable from '@/components/MenuTable.vue'
-import { format } from 'date-fns'
 
 type tab = {
   name: string
@@ -26,13 +25,15 @@ const maxDate = ref(undefined)
 </script>
 
 <template>
-  <div class="lg:w-1/2">
-    <Calendar
-      :date="date"
-      :minDate="minDate"
-      :maxDate="maxDate"
-      @dateUpdated="(newDate) => (date = newDate)"
-    />
+  <div class="flex items-center justify-center">
+    <div class="lg:w-1/2">
+      <Calendar
+        :date="date"
+        :minDate="minDate"
+        :maxDate="maxDate"
+        @dateUpdated="(newDate) => (date = newDate)"
+      />
+    </div>
   </div>
   <div class="p-5">
     <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">

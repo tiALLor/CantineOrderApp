@@ -1,9 +1,9 @@
 import { mealRepository } from '@server/repositories/mealRepository'
-import { chefAuthProcedure } from '@server/trpc/chefAuthProcedure'
+import { authenticatedProcedure } from '@server/trpc/authenticatedProcedure'
 import provideRepos from '@server/trpc/provideRepos'
 import { mealSchema, type MealPublic } from '@server/entities/meal'
 
-export default chefAuthProcedure
+export default authenticatedProcedure
   .use(provideRepos({ mealRepository }))
   .input(mealSchema.pick({ type: true }))
   .mutation(async ({ input: meal, ctx: { repos } }): Promise<MealPublic[]> => {

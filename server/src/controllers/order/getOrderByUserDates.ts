@@ -14,13 +14,13 @@ export default authenticatedProcedure
       input: dates,
       ctx: { repos, authUser },
     }): Promise<OrderWithUserMeal[]> => {
-      const monthlyCosts = await repos.orderRepository
+      const order = await repos.orderRepository
         .getOrderByUserDates(authUser.id, dates.dates)
         .catch((error: unknown) => {
           assertError(error)
 
           throw error
         })
-      return monthlyCosts
+      return order
     }
   )

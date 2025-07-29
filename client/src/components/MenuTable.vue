@@ -3,10 +3,13 @@ import { trpc } from '@/trpc'
 import { onMounted, ref, computed, watch } from 'vue'
 import { FwbButton, FwbAlert } from 'flowbite-vue'
 import type { MenuWithMeal, MealType } from '@server/shared/types'
-import { format, addDays } from 'date-fns'
+import { format } from 'date-fns'
 import AlertMessages from '@/components/AlertMessages.vue'
 import useErrorMessage from '@/composables/useErrorMessage'
 import MenuModalBody from '@/components/MenuModalBody.vue'
+import { useUserAuthStore } from '@/stores/user'
+
+const userAuthStore = useUserAuthStore()
 
 const props = defineProps<{
   type: MealType
@@ -58,28 +61,30 @@ onMounted(fetchMenu)
 </script>
 
 <template>
-  <div class="p-5">
-    <fwb-button color="default" @click="showAddToMenuModal()" :disabled="isEditDisabled"
-      >Add {{ type }}</fwb-button
+  <div v-if="userAuthStore.isLoggedIn">
+    <div class="p-5">
+      <fwb-button color="default" @click="showAddToMenuModal()" :disabled="isEditDisabled"
+        >Add {{ type }}</fwb-button
+      >
+    </div>
+    <fwb-alert
+      type="warning"
+      class="text-lg font-bold text-red-800 dark:text-red-400"
+      :hidden="!isEditDisabled"
     >
+      Menu can be changed only for future
+    </fwb-alert>
+    <AlertMessages
+      :showSuccess="hasSucceeded"
+      successMessage="Meal deleted."
+      :errorMessage="errorMessage"
+    />
   </div>
-  <fwb-alert
-    type="warning"
-    class="text-lg font-bold text-red-800 dark:text-red-400"
-    :hidden="!isEditDisabled"
-  >
-    Menu can be changed only for future
-  </fwb-alert>
-  <AlertMessages
-    :showSuccess="hasSucceeded"
-    successMessage="Meal deleted."
-    :errorMessage="errorMessage"
-  />
-  <div class="max-h-[40vh] space-y-2 overflow-y-auto">
+  <div class="max-h-[38vh] space-y-2 overflow-y-auto">
     <div
       v-for="meal in mealsInMenu"
       :key="meal.id"
-      class="flex flex-col items-start justify-between rounded-lg border border-gray-200 p-3 shadow-sm sm:flex-row sm:items-center"
+      class="flex flex-col items-start justify-between rounded-lg border border-gray-200 p-1.5 shadow-sm sm:flex-row sm:items-center"
       :data-testId="`row-${meal.name}`"
     >
       <!-- Meal Info: Name and Price -->
@@ -91,14 +96,14 @@ onMounted(fetchMenu)
       </div>
 
       <!-- Action Buttons -->
-      <div class="mt-2 flex w-full gap-2 sm:mt-0 sm:w-auto">
+      <div v-if="userAuthStore.isLoggedIn" class="mt-2 flex w-full gap-2 sm:mt-0 sm:w-auto">
         <fwb-button size="sm" color="pink" @click="removeMeal(meal.id)" :disabled="isEditDisabled">
           Remove
         </fwb-button>
       </div>
     </div>
   </div>
-  <div>
+  <div v-if="userAuthStore.isLoggedIn">
     <MenuModalBody
       :isShowModal="isShowAddToMenuModal"
       :date="date"

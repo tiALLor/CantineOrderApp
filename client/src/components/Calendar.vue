@@ -36,6 +36,7 @@ const moveToTomorrow = () => {
       :first-day-of-week="2"
       :masks="{ weekdays: 'WWW' }"
       aria-label="calendar"
+      is-required
     >
       <template #footer>
         <div class="w-full px-4 pb-3">

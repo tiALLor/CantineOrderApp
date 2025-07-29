@@ -53,6 +53,13 @@ export default authenticatedProcedure
                 cause: error,
               })
             }
+            if (error.message.includes('unique')) {
+              throw new TRPCError({
+                code: 'BAD_REQUEST',
+                message: 'Order for date and user already exist',
+                cause: error,
+              })
+            }
 
             throw error
           })

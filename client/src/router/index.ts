@@ -6,28 +6,6 @@ import { authenticateUser, authenticateChef, authenticateAdmin } from './guards'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    // {
-    //   path: '/dashboard',
-    //   component: MainLayout,
-    //   beforeEnter: [authenticateUser],
-    //   children: [
-    //     {
-    //       path: 'write-article',
-    //       name: 'WriteArticle',
-    //       component: () => import('../views/WriteArticle.vue'),
-    //     },
-    //   ],
-    // },
-    // {
-    //   path: '/login',
-    //   name: 'Login',
-    //   component: () => import('../views/LoginView.vue'),
-    // },
-    // {
-    //   path: '/signup',
-    //   name: 'Signup',
-    //   component: () => import('../views/SignupView.vue'),
-    // },
     {
       path: '',
       component: MainLayout,
@@ -89,6 +67,10 @@ const router = createRouter({
           component: () => import('../views/AccountSettings.vue'),
         },
       ],
+    },
+    {
+      path: '/:catchAll(.*)*',
+      redirect: '/',
     },
   ],
 })
