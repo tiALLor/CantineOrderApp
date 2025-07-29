@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { fakeUser, fakeMeal } from 'utils/fakeData'
 import { signInUser, asUser } from 'utils/api'
-import { logout } from '../../src/utils/auth'
 
 const userAsUser = fakeUser({})
 
