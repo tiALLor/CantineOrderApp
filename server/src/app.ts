@@ -5,7 +5,7 @@ import {
 } from '@trpc/server/adapters/express'
 import cors from 'cors'
 import { renderTrpcPanel } from 'trpc-panel'
-import morganMiddleware from 'middleware/morganMiddleware'
+import morganMiddleware from './middleware/morganMiddleware'
 import logger from './utils/logger'
 import type { Database } from './database'
 import { appRouter } from './controllers'
