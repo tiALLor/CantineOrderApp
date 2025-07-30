@@ -108,6 +108,10 @@ This project is a full-stack web application built with TypeScript, Express.js, 
 
 ## How to poke and use
 
+link to running service:
+
+https://cantina-service-1.g7k0w3n7paahe.eu-central-1.cs.amazonlightsail.com
+
 ### 1. Admin Setup
 
 1. **Log in as admin using the default credentials:**
