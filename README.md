@@ -14,7 +14,7 @@ This project is a full-stack web application built with TypeScript, Express.js, 
 - Role-based user access (`admin`, `chef`, `user`)
 - User with Role: admin can create other users will any given role
 - User with Role: chef can manage meals and menus
-- User with Role: user can order a menu and check 
+- User with Role: user can order a menu and check
 - Signup only for user with role user
 - Users can order meals (`main`, `soup`) for future dates
 - Menus are created per day and meal
@@ -105,6 +105,54 @@ This project is a full-stack web application built with TypeScript, Express.js, 
   ```bash
   npm run lint
   ```
+
+## How to poke and use
+
+### 1. Admin Setup
+
+1. **Log in as admin using the default credentials:**
+
+   - **Email:**
+     ```
+     admin@admin.com
+     ```
+   - **Initial password:**
+     ```
+     changeAdminPass
+     ```
+
+2. **Create a new user with the `chef` role**  
+   Use the admin panel or API to add a chef.
+
+---
+
+### 2. Chef Actions
+
+1. **Log in as the chef user you just created.**
+2. **Create meals**  
+   Add new meals to the system.
+3. **Create menus**  
+   Assign created meals to daily menus.
+
+---
+
+### 3. User Actions
+
+1. **Sign up as a new user (role: `user`).**
+2. **Log in as the new user.**
+3. **Order menus**  
+   Place orders for available menus.
+4. **Change orders**  
+   Modify existing orders if needed.
+5. **Check order history**  
+   View your past orders.
+
+---
+
+### 4. API Exploration
+
+- Use the [tRPC panel](http://localhost:3000/api/v1/trpc-panel) for interactive API testing.
+- Alternatively, use the REST Client requests in `/server/tests/rest.http`.
 
 ## Additional Notes
 
