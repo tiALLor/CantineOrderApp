@@ -102,3 +102,105 @@ it('should update the order partially', async () => {
 
   expect(orderForMenuInDatabase).toEqual(updatedOrder)
 })
+
+it('should update the order', async () => {
+  const [orderForMenu] = await insertAll(db, 'order', {
+    date: validDate,
+    userId: userOne.id,
+    soupMealId: mealOne.id,
+    mainMealId: mealTwo.id,
+  })
+
+  const record = {
+    date: validDate,
+    soupMealId: null,
+    mainMealId: null,
+  }
+
+  const updatedOrder = await updateOrder(record)
+
+  expect(updatedOrder).toEqual({
+    id: orderForMenu.id,
+    date: dateAsString,
+    userId: userOne.id,
+    soupMealId: null,
+    mainMealId: null,
+  })
+
+  const [orderForMenuInDatabase] = await selectAll(db, 'order', (eb) =>
+    eb('id', '=', orderForMenu.id)
+  )
+
+  expect(orderForMenuInDatabase).toEqual(updatedOrder)
+})
+
+it('should throw a error id date from past', async () => {
+  await insertAll(db, 'order', {
+    date: validDate,
+    userId: userOne.id,
+    soupMealId: mealOne.id,
+    mainMealId: mealTwo.id,
+  })
+
+  const record = {
+    date: new Date('2000-01-01'),
+    soupMealId: null,
+  }
+
+  await expect(updateOrder(record)).rejects.toThrow(/today or past/i)
+})
+
+it('should throw a error if soup mealId do not exist', async () => {
+  await insertAll(db, 'order', {
+    date: validDate,
+    userId: userOne.id,
+    soupMealId: mealOne.id,
+    mainMealId: mealTwo.id,
+  })
+
+  const record = {
+    date: validDate,
+    soupMealId: 99999999,
+  }
+
+  await expect(updateOrder(record)).rejects.toThrow(/meal do not exist/i)
+})
+
+it('should throw a error if main mealId do not exist', async () => {
+  await insertAll(db, 'order', {
+    date: validDate,
+    userId: userOne.id,
+    soupMealId: mealOne.id,
+    mainMealId: mealTwo.id,
+  })
+
+  const record = {
+    date: validDate,
+    mainMealId: 99999999,
+  }
+
+  await expect(updateOrder(record)).rejects.toThrow(/meal do not exist/i)
+})
+
+it('should create a order id order do not exist', async () => {
+  const record = {
+    date: new Date('2050-01-01'),
+    soupMealId: mealOne.id,
+    mainMealId: mealTwo.id,
+  }
+
+  await insertAll(db, 'menu', [
+    fakeMenu({ date: new Date('2050-01-01'), mealId: mealOne.id }),
+    fakeMenu({ date: new Date('2050-01-01'), mealId: mealTwo.id }),
+  ])
+
+  const updatedOrder = await updateOrder(record)
+
+  expect(updatedOrder).toEqual({
+    date: format(new Date('2050-01-01'), 'yyyy-MM-dd'),
+    id: expect.any(Number),
+    userId: userOne.id,
+    soupMealId: mealOne.id,
+    mainMealId: mealTwo.id,
+  })
+})

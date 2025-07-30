@@ -66,3 +66,12 @@ it('get users monthly cost summary', async () => {
     priceEur: '4',
   })
 })
+
+it('get users monthly cost summary', async () => {
+  await expect(
+    getMonthlyCosts({
+      year: 2025,
+      month: 13,
+    })
+  ).rejects.toThrow(/month/i)
+})

@@ -18,7 +18,7 @@ export default chefAuthProcedure
         if (error.message.includes('foreign')) {
           throw new TRPCError({
             code: 'BAD_REQUEST',
-            message: 'Reference to meal do not exist',
+            message: 'Menu being used',
             cause: error,
           })
         }

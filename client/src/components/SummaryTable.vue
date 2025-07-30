@@ -99,7 +99,10 @@ onMounted(() => {
       class="flex flex-col items-start justify-between rounded-lg border border-gray-200 p-1.5 shadow-sm sm:flex-row sm:items-center"
     >
       <!-- Meal Info: Name and Price -->
-      <div class="flex w-full flex-col gap-1 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
+      <div
+        class="flex w-full flex-col gap-1 sm:w-auto sm:flex-row sm:items-center sm:gap-4"
+        v-if="order.mainMealName"
+      >
         <div class="text-lg font-medium text-gray-900">
           {{ order.mainMealName }}
         </div>

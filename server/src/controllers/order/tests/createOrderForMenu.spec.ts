@@ -63,3 +63,37 @@ it('should create a menu order', async () => {
   )
   expect(orderForMenuInDatabase).toEqual(orderForMenu)
 })
+
+it('should trow a error if date is from past', async () => {
+  const record = {
+    date: new Date('2000-01-01'),
+    userId: userOne.id,
+    soupMealId: mealOne.id,
+    mainMealId: mealTwo.id,
+  }
+
+  await expect(createOrderForMenu(record)).rejects.toThrow(/today or past/i)
+})
+
+it('should trow a error if mealId do not exit', async () => {
+  const record = {
+    date: validDate,
+    userId: userOne.id,
+    soupMealId: 99999999,
+    mainMealId: mealTwo.id,
+  }
+
+  await expect(createOrderForMenu(record)).rejects.toThrow(/Reference/i)
+})
+
+it('should trow a error if order already exists', async () => {
+  const record = {
+    date: validDate,
+    userId: userOne.id,
+    soupMealId: mealOne.id,
+    mainMealId: mealTwo.id,
+  }
+
+  await createOrderForMenu(record)
+  await expect(createOrderForMenu(record)).rejects.toThrow(/exist/i)
+})

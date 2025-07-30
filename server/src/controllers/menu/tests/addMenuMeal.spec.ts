@@ -67,3 +67,32 @@ it('should trow a error if meal exist in menu date', async () => {
 
   await expect(addMenuMeal(menuMealData)).rejects.toThrow(/meal/i)
 })
+
+it('should trow a error if mealId do not exists ', async () => {
+  const menuMealData = {
+    date: validDate,
+    mealId: 9999999,
+  }
+
+  await expect(addMenuMeal(menuMealData)).rejects.toThrow(/meal/i)
+})
+
+it('should trow a error if menu meal element', async () => {
+  const menuMealData = {
+    date: validDate,
+    mealId: mealTree.id,
+  }
+
+  await addMenuMeal(menuMealData)
+
+  await expect(addMenuMeal(menuMealData)).rejects.toThrow(/meal/i)
+})
+
+it('should trow a error if date is from past', async () => {
+  const menuMealData = {
+    date: new Date('2000-01-01'),
+    mealId: mealTree.id,
+  }
+
+  await expect(addMenuMeal(menuMealData)).rejects.toThrow(/today or past/i)
+})
