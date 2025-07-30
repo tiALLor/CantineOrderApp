@@ -62,6 +62,11 @@ const router = createRouter({
       beforeEnter: [authenticateUser],
       children: [
         {
+          path: '/orderSummary',
+          name: 'OrderSummary',
+          component: () => import('../views/OrderSummary.vue'),
+        },
+        {
           path: '/accountSettings',
           name: 'AccountSettings',
           component: () => import('../views/AccountSettings.vue'),

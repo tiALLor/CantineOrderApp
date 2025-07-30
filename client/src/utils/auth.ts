@@ -37,7 +37,7 @@ export async function login(userLogin: { email: string; password: string }) {
     userAuthStore.storeTokenAndUser(authToken, decodedPayload.user)
   } catch (error) {
     userAuthStore.storeTokenAndUser(null, null)
-    // TODO: check Error handling
+    
     console.error('JWT decoding failed', error)
     throw new Error('Failed to decode authentication token.')
   }

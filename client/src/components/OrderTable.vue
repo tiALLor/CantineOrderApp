@@ -61,7 +61,6 @@ const [updateOrder, errorMessage] = useErrorMessage(async () => {
   }
   await trpc.order.updateOrder.mutate(submitData)
 
-  // emit('success')
   hasSucceeded.value = true
 })
 
@@ -119,6 +118,7 @@ onMounted(() => {
                   class="w-full"
                   label-class="w-full text-left"
                   :data-testId="`row-soup-no order`"
+                  :disabled="isEditDisabled"
                 />
               </div>
             </fwb-list-group-item>
@@ -126,12 +126,13 @@ onMounted(() => {
               <div class="flex w-full items-center px-4">
                 <fwb-radio
                   v-model="pickedSoup"
-                  :label="soup.name"
+                  :label="`${soup.name} for ${soup.priceEur}€`"
                   name="soup meal menu list radio"
                   :value="soup.mealId.toString()"
                   class="w-full"
                   label-class="w-full text-left"
                   :data-testId="`row-soup-${soup.name}`"
+                  :disabled="isEditDisabled"
                 />
               </div>
             </fwb-list-group-item>
@@ -152,6 +153,7 @@ onMounted(() => {
                   class="w-full"
                   label-class="w-full text-left"
                   :data-testId="`row-main-no order`"
+                  :disabled="isEditDisabled"
                 />
               </div>
             </fwb-list-group-item>
@@ -159,12 +161,13 @@ onMounted(() => {
               <div class="flex w-full items-center px-4">
                 <fwb-radio
                   v-model="pickedMain"
-                  :label="mainMeal.name"
+                  :label="`${mainMeal.name} for ${mainMeal.priceEur}€`"
                   name="main meal menu list radio"
                   :value="mainMeal.mealId.toString()"
                   class="w-full"
                   label-class="w-full text-left"
                   :data-testId="`row-main-${mainMeal.name}`"
+                  :disabled="isEditDisabled"
                 />
               </div>
             </fwb-list-group-item>

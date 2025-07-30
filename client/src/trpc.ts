@@ -13,7 +13,7 @@ export const trpc = createTRPCProxyClient<AppRouter>({
 
       // send the access token with every request
       headers: () => {
-        // TODO: attach the access token to the request Authorization header
+        // attach the access token to the request Authorization header
         const userAuthStore = useUserAuthStore()
         const accessToken = userAuthStore.authToken
         return accessToken ? { Authorization: `Bearer ${accessToken}` } : {}

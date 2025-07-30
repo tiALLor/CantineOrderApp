@@ -26,7 +26,7 @@ const links = computed(() => [
 
   ...(userAuthStore.isLoggedIn
     ? [
-        // { label: 'Monthly costs', name: 'Costs' },
+        { label: 'Your orders', name: 'OrderSummary' },
         { label: 'Account settings', name: 'AccountSettings' },
       ]
     : [

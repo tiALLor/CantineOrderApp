@@ -19,7 +19,6 @@ const [submitLogin, errorMessage] = useErrorMessage(async () => {
   // Support redirects back to the page the user was on before logging in
   // if it is provided in the query string:
   // :to="/login?redirect=/some-page-to-go/after-login"
-  // TODO: correct redirection to home
   const redirectTo = (router.currentRoute.value.query.redirect as string) ?? {
     name: 'Home',
   }

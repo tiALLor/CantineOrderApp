@@ -33,7 +33,6 @@ const mealForm = ref({
   type: props.type,
 })
 
-// --- Set default values when modal opens
 watch(
   () => props.isShowModal,
   (isOpen) => {

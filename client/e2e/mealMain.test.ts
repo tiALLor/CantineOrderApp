@@ -43,7 +43,6 @@ test.describe.serial('main tests in sequence', () => {
       await page.getByLabel('close').click()
 
       await expect(page.getByTestId(`row-${mainForTest.name}`)).toBeVisible()
-      // await expect(page.getByText(mainForTest.name)).toBeVisible()
     })
   })
   test('user as chef can edit main', async ({ page }) => {

@@ -5,10 +5,6 @@ import { testUser } from '@server/shared/forTests'
 
 const user = fakeUser()
 
-// const testUser = {
-//   email: 'admin@email.com',
-//   password: 'admin12345',
-// }
 
 test.describe('login and create user', () => {
   test('visitor can signup', async ({ page }) => {

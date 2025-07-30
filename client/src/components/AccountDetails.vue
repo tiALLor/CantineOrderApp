@@ -1,6 +1,4 @@
 <script setup lang="ts">
-// import { ref } from 'vue'
-// import { FwbTab, FwbTabs } from 'flowbite-vue'
 import { useUserAuthStore } from '@/stores/user'
 
 const userAuthStore = useUserAuthStore()

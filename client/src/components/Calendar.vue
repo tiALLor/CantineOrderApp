@@ -29,7 +29,7 @@ const moveToTomorrow = () => {
     <VDatePicker
       v-model="calendarDate"
       expanded
-      is-dark="system"
+      :is-dark="false"
       view="weekly"
       :min-date="props.minDate"
       :max-date="props.maxDate"

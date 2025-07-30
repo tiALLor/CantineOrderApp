@@ -32,7 +32,6 @@ test.describe.serial('signup and login sequence', () => {
     // Then (ASSERT)
     await expect(successMessage).toBeVisible()
   })
-  // TODO: test for access without login
 
   test('visitor can login', async ({ page }) => {
     await page.goto('/login')
