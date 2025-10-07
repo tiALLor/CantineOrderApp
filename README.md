@@ -19,7 +19,6 @@ This project is a full-stack web application built with TypeScript, Express.js, 
 - Users can order meals (`main`, `soup`) for future dates
 - Menus are created per day and meal
 - Secure password handling (bcrypt + pepper)
-- To "poke" its existing functionality use trpc-panel a http://localhost:3000/api/v1/trpc-panel or user rest.http file in /server/tests with REST Client
 
 ## Project Structure
 
