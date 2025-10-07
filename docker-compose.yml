@@ -23,7 +23,7 @@ services:
     #   - ./server/.env
     environment:
       # connection details to development branch
-      DATABASE_URL: postgresql://neondb_owner:npg_FyMtWJe4mx5H@ep-wandering-smoke-a2sq83ty-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+      DATABASE_URL: postgresql://neondb_owner:db_connection_details
       PORT: 3000
     ports:
       - "3000"
