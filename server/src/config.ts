@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import { z } from 'zod'
+import type { Secret } from 'jsonwebtoken'
 import { testUser } from './shared/forTests'
 
 const { env } = process
@@ -12,6 +13,11 @@ env.TZ = 'UTC'
 const isTest = env.NODE_ENV === 'test'
 const isDevTest = env.NODE_ENV === 'development' || isTest
 
+const jwtExpirySchema = z.union([
+  z.number(),
+  z.string().regex(/^\d+(ms|s|m|h|d|w|y)$/), // e.g. "1h", "30m", "7d"
+])
+
 const schema = z
   .object({
     env: z
@@ -21,14 +27,27 @@ const schema = z
     port: z.coerce.number().default(3000),
 
     auth: z.object({
-      tokenKey: z.string().default(() => {
-        if (isDevTest) {
-          return 'supersecretkey'
-        }
+      tokenKey: z
+        .string()
+        .default(() => {
+          if (isDevTest) {
+            return 'supersecretkey'
+          }
+          throw new Error('You must provide a TOKEN_KEY in a production env!')
+        })
+        .transform((val) => val as Secret), // Cast to Secret for JWT typing,
+      refreshTokenKey: z
+        .string()
+        .default(() => {
+          if (isDevTest) {
+            return 'superRefreshSecretKey'
+          }
 
-        throw new Error('You must provide a TOKEN_KEY in a production env!')
-      }),
-      expiresIn: z.coerce.string().default('1h'),
+          throw new Error('You must provide a TOKEN_KEY in a production env!')
+        })
+        .transform((val) => val as Secret), // Cast to Secret for JWT typing,
+      tokenExpiresIn: jwtExpirySchema.default('1h'),
+      refreshTokenExpiresIn: jwtExpirySchema.default('7d'),
       passwordCost: z.coerce.number().default(isDevTest ? 6 : 12),
       passwordPepper: z.string().default('abc123'),
     }),
@@ -73,7 +92,9 @@ const config = schema.parse({
 
   auth: {
     tokenKey: env.TOKEN_KEY,
-    expiresIn: env.TOKEN_EXPIRES_IN,
+    refreshTokenKey: env.REFRESH_TOKEN_KEY,
+    tokenExpiresIn: env.TOKEN_EXPIRES_IN,
+    refreshTokenExpiresIn: env.REFRESH_TOKEN_EXPIRES_IN,
     passwordCost: env.PASSWORD_COST,
     passwordPepper: env.PASSWORD_PEPPER,
   },

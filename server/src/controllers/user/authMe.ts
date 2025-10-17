@@ -1,17 +1,13 @@
 import config from '@server/config'
+import { authenticatedProcedure } from '@server/trpc/authenticatedProcedure'
 import { TRPCError } from '@trpc/server'
-import { publicProcedure } from '..'
+import { assertError } from '@server/utils/errors'
+import type { UserPublic } from '@server/shared/types'
+import { z } from 'zod'
 
-export const authenticatedProcedure = publicProcedure.use(
-  async ({ ctx, next }) => {
-    if (ctx.authUser) {
-      return next({
-        ctx: {
-          ...ctx,
-          authUser: ctx.authUser,
-        },
-      })
-    }
+export default authenticatedProcedure
+  .input(z.object({}))
+  .mutation(async ({ ctx }): Promise<UserPublic> => {
     // we depend on having an Express request object
     if (!ctx.req) {
       const message =
@@ -24,7 +20,7 @@ export const authenticatedProcedure = publicProcedure.use(
         message,
       })
     }
-
+    // we will try to authenticate
     let token: string | undefined
 
     const authHeader = ctx.req.headers
@@ -40,22 +36,33 @@ export const authenticatedProcedure = publicProcedure.use(
       })
     }
 
-    const data = await ctx.authService.verifyAccessToken(token)
+    try {
+      const data = await ctx.authService.verifyAccessToken(token)
 
-    const authUser = data.user
+      const authUser: UserPublic = data.user
 
-    if (!authUser) {
+      if (!authUser) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'Invalid token.',
+        })
+      }
+
+      return authUser
+    } catch (error) {
+      // Clear invalid refresh token cookie
+      if (ctx.res) {
+        ctx.res.clearCookie('refreshToken')
+      }
+      assertError(error)
+      if (error instanceof TRPCError) {
+        throw error
+      }
+
       throw new TRPCError({
         code: 'UNAUTHORIZED',
-        message: 'Invalid token.',
+        message: 'authMe failed',
+        cause: error,
       })
     }
-
-    return next({
-      ctx: {
-        ...ctx,
-        authUser,
-      },
-    })
-  }
-)
+  })

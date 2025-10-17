@@ -3,34 +3,46 @@ import { fakeUser } from '@server/entities/tests/fakes'
 import { wrapInRollbacks } from '@tests/utils/transactions'
 import { insertAll } from '@tests/utils/records'
 import type { AuthUserWithRoleName } from '@server/entities/user'
+import { AuthService } from '@server/services/authService'
 import { createCallerFactory, router } from '..'
 import { adminAuthProcedure } from '.'
+
+const VALID_TOKEN = 'valid-token'
 
 const routes = router({
   testCall: adminAuthProcedure.query(() => 'passed'),
 })
 
 const db = await wrapInRollbacks(createTestDatabase())
+
 const [userGeneral, userChef, userAdmin] = await insertAll(db, 'user', [
   fakeUser(),
   fakeUser({ roleId: 2 }),
   fakeUser({ roleId: 1 }),
 ])
 
-const createCaller = createCallerFactory(routes)
-const VALID_TOKEN = 'valid-token'
-
-vi.mock('jsonwebtoken', () => ({
-  default: {
-    verify: (token: string) => {
-      if (token !== VALID_TOKEN) throw new Error('Invalid token')
-
-      return {
-        user: { id: userAdmin.id, name: userAdmin.name, roleName: 'admin' },
-      }
-    },
+const fakeAuthService = {
+  verifyAccessToken: (token: string) => {
+    if (token !== VALID_TOKEN) throw new Error('Invalid token')
+    return {
+      user: { id: userAdmin.id, name: userAdmin.name, roleName: 'admin' },
+    }
   },
-}))
+} as unknown as AuthService
+
+const createCaller = createCallerFactory(routes)
+
+// vi.mock('jsonwebtoken', () => ({
+//   default: {
+//     verify: (token: string) => {
+//       if (token !== VALID_TOKEN) throw new Error('Invalid token')
+
+//       return {
+//         user: { id: userAdmin.id, name: userAdmin.name, roleName: 'admin' },
+//       }
+//     },
+//   },
+// }))
 
 it('should pass if the user role is admin', async () => {
   const authUserRoleIsValid = createCaller({
@@ -40,6 +52,7 @@ it('should pass if the user role is admin', async () => {
       roleName: 'admin',
       name: userAdmin.name,
     } as AuthUserWithRoleName,
+    authService: fakeAuthService,
   })
 
   const response = await authUserRoleIsValid.testCall()
@@ -51,8 +64,9 @@ it('should pass if user provides a valid token', async () => {
   const usingValidToken = createCaller({
     db,
     req: {
-      header: () => `Bearer ${VALID_TOKEN}`,
+      headers: { authorization: `Bearer ${VALID_TOKEN}` },
     } as any,
+    authService: fakeAuthService,
   })
 
   const response = await usingValidToken.testCall()
@@ -68,6 +82,7 @@ it('should throw an error if the user role is user', async () => {
       roleName: 'user',
       name: userGeneral.name,
     } as AuthUserWithRoleName,
+    authService: fakeAuthService,
   })
 
   await expect(authUserRoleIsInvalid.testCall()).rejects.toThrow(/role/i)
@@ -81,6 +96,7 @@ it('should throw an error if the user role is chef', async () => {
       roleName: 'chef',
       name: userChef.name,
     } as AuthUserWithRoleName,
+    authService: fakeAuthService,
   })
 
   await expect(authUserRoleIsInvalid.testCall()).rejects.toThrow(/role/i)
@@ -93,6 +109,7 @@ it('should throw an error if the authUser is undefined', async () => {
       header: () => undefined,
     } as any,
     authUser: undefined,
+    authService: fakeAuthService,
   })
 
   await expect(authUserIsUndefined.testCall()).rejects.toThrow(
@@ -108,6 +125,7 @@ it('should throw an error if the userId do not exist', async () => {
       roleName: 'user',
       name: userGeneral.name,
     } as AuthUserWithRoleName,
+    authService: fakeAuthService,
   })
   await expect(authUserRoleIsInvalid.testCall()).rejects.toThrow(/user/i)
 })
@@ -120,6 +138,7 @@ it('should throw an error if authUser Role do not match db role', async () => {
       roleName: 'user',
       name: userAdmin.name,
     } as AuthUserWithRoleName,
+    authService: fakeAuthService,
   })
 
   await expect(authUserRoleIsInvalid.testCall()).rejects.toThrow(/user/i)

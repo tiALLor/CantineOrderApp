@@ -5,13 +5,17 @@ import { selectAll } from '@tests/utils/records'
 import { fakeUser } from '@server/entities/tests/fakes'
 import { random } from '@tests/utils/random'
 import userRouter from '@server/controllers/user'
+import { AuthService } from '@server/services/authService'
 
 const db = await wrapInRollbacks(createTestDatabase())
+
+const authService = new AuthService(db)
+
 const createCaller = createCallerFactory(userRouter)
 
 const PASSWORD_CORRECT = 'Password.098'
 
-const { signup } = createCaller({ db })
+const { signup } = createCaller({ db, authService })
 
 it('should create a user with role user', async () => {
   const userData = fakeUser({

@@ -1,46 +1,42 @@
-import { userSchema } from '@server/entities/user'
-import { userRepository } from '@server/repositories/userRepository'
+import { userSchema, type UserPublic } from '@server/entities/user'
 import { publicProcedure } from '@server/trpc'
-import provideRepos from '@server/trpc/provideRepos'
 import { TRPCError } from '@trpc/server'
 import { assertError } from '@server/utils/errors'
-import { getPasswordHash } from '@server/utils/hash'
 
 // remove roleId from input and adjust the tests
 export default publicProcedure
-  .use(provideRepos({ userRepository }))
   .input(
     userSchema.pick({
       email: true,
       password: true,
       name: true,
+      roleId: true,
     })
   )
-  .mutation(async ({ input: user, ctx: { repos } }) => {
-    const passwordHash = await getPasswordHash(user.password)
+  .mutation(
+    async ({ input: user, ctx: { authService } }): Promise<UserPublic> => {
+      let newUser: UserPublic
 
-    const userCreated = await repos.userRepository
-      .create({
-        ...user,
-        password: passwordHash,
-        roleId: 3,
-      })
-      .catch((error: unknown) => {
+      try {
+        newUser = await authService.signup(
+          user.email,
+          user.name,
+          user.password,
+          user.roleId
+        )
+      } catch (error) {
         assertError(error)
-
-        // wrapping an ugly error into a user-friendly one
-        if (error.message.includes('duplicate key')) {
-          throw new TRPCError({
-            code: 'BAD_REQUEST',
-            message: 'User with this email already exists',
-            cause: error,
-          })
+        if (error instanceof TRPCError) {
+          throw error
         }
 
-        throw error
-      })
-    return {
-      id: userCreated.id,
-      name: userCreated.name,
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'User signup failed',
+          cause: error,
+        })
+      }
+
+      return newUser
     }
-  })
+  )

@@ -19,18 +19,21 @@ module.exports = {
     // that can cause issues when using import aliases.
     'import/extensions': 'off',
     'import/no-extraneous-dependencies': 'off',
-    'import/order': ['error', {
-      'pathGroups': [
-        {
-          'pattern': '@server/**',
-          'group': 'internal'
-        },
-        {
-          'pattern': '@tests/**',
-          'group': 'internal'
-        },
-      ],
-    }],
+    'import/order': [
+      'error',
+      {
+        pathGroups: [
+          {
+            pattern: '@server/**',
+            group: 'internal',
+          },
+          {
+            pattern: '@tests/**',
+            group: 'internal',
+          },
+        ],
+      },
+    ],
 
     // functions are always hoisted, so we can use them before they are defined
     // which in various cases improves readability

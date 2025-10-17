@@ -7,8 +7,12 @@ import { authContext } from '@tests/utils/context'
 import { authUserSchemaWithRoleName } from '@server/entities/user'
 import orderRouter from '@server/controllers/order'
 import { addDays, format } from 'date-fns'
+import type { AuthService } from '@server/services/authService'
 
 const db = await wrapInRollbacks(createTestDatabase())
+
+const authService = {} as AuthService
+
 const createCaller = createCallerFactory(orderRouter)
 
 const [userOne] = await insertAll(db, 'user', [
@@ -37,7 +41,7 @@ await insertAll(db, 'menu', [
 
 const { createOrderForMenu } = createCaller(
   authContext(
-    { db },
+    { db, authService },
     authUserSchemaWithRoleName.parse({ ...userOne, roleName: 'user' })
   )
 )

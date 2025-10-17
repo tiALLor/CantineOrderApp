@@ -12,7 +12,7 @@ export const adminAuthProcedure = authenticatedProcedure
     if (!user) {
       throw new TRPCError({
         code: 'UNAUTHORIZED',
-        message: 'User with given Id has not role',
+        message: 'User with given Id has no role',
       })
     }
 

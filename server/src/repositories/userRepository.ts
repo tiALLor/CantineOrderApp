@@ -1,9 +1,11 @@
 import type { Database, User } from '@server/database'
 import type { Selectable } from 'kysely'
+import logger from '@server/utils/logger'
 import { prefixTable } from '../utils/strings'
 import {
   userKeyAll,
   userKeyPublic,
+  userSchemaWithRoleName,
   type UserInsertable,
   type UserPublic,
   type UserWithRoleName,
@@ -39,7 +41,23 @@ export function userRepository(db: Database) {
           eb.ref('role.name').as('roleName'),
         ])
         .executeTakeFirst()
-      return user as UserWithRoleName | undefined
+      // if no user exit early
+      if (!user) {
+        return undefined
+      }
+
+      try {
+        // Validate the database result
+        const parsedUser = userSchemaWithRoleName.parse(user)
+        return parsedUser
+      } catch (error) {
+        logger.error(
+          `Zod Role validation failed for user ID ${user.id}:`,
+          error
+        )
+        // throw a specific error or return undefined here
+        return undefined
+      }
     },
 
     async getById(id: number): Promise<Selectable<User> | undefined> {
@@ -60,7 +78,20 @@ export function userRepository(db: Database) {
         .select([...prefixTable('user', userKeyAll), 'role.name as roleName'])
         .executeTakeFirst()
 
-      return user as UserWithRoleName | undefined
+      // if no user exit early
+      if (!user) {
+        return undefined
+      }
+
+      try {
+        // Validate the database result
+        const parsedUser = userSchemaWithRoleName.parse(user)
+        return parsedUser
+      } catch (error) {
+        logger.error(`Zod Role validation failed for user ID ${id}:`, error)
+        // throw a specific error or return undefined here
+        return undefined
+      }
     },
 
     async updatePassword({

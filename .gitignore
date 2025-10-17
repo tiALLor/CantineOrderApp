@@ -3,3 +3,7 @@ node_modules
 containers.json
 logs
 *.log
+
+/.vscode
+.editorconfig
+docker-compose.yml

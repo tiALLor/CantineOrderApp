@@ -7,8 +7,12 @@ import { authContext } from '@tests/utils/context'
 import { authUserSchemaWithRoleName } from '@server/entities/user'
 import menuRouter from '@server/controllers/menu'
 import { addDays, format } from 'date-fns'
+import type { AuthService } from '@server/services/authService'
 
 const db = await wrapInRollbacks(createTestDatabase())
+
+const authService = {} as AuthService
+
 const createCaller = createCallerFactory(menuRouter)
 
 const [userOne] = await insertAll(db, 'user', [fakeUser({ roleId: 2 })])
@@ -29,7 +33,7 @@ await insertAll(db, 'menu', [
 
 const { addMenuMeal } = createCaller(
   authContext(
-    { db },
+    { db, authService },
     authUserSchemaWithRoleName.parse({ ...userOne, roleName: 'chef' })
   )
 )

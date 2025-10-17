@@ -7,8 +7,12 @@ import { authContext } from '@tests/utils/context'
 import { authUserSchemaWithRoleName } from '@server/entities/user'
 import userRouter from '@server/controllers/user'
 import { getPasswordHash } from '@server/utils/hash'
+import { AuthService } from '@server/services/authService'
 
 const db = await wrapInRollbacks(createTestDatabase())
+
+const authService = new AuthService(db)
+
 const createCaller = createCallerFactory(userRouter)
 
 const PASSWORD_CORRECT = 'Password.098'
@@ -20,7 +24,7 @@ const [userOne] = await insertAll(db, 'user', [
 
 const { removeUser } = createCaller(
   authContext(
-    { db },
+    { db, authService },
     authUserSchemaWithRoleName.parse({ ...userOne, roleName: 'user' })
   )
 )
@@ -32,7 +36,7 @@ it('should allow user to delete the user', async () => {
 
   const result = await removeUser(data)
 
-  expect(result).toEqual({ id: userOne.id })
+  expect(result).toEqual({ id: userOne.id, name: userOne.name })
 
   const [userInDatabase] = await selectAll(db, 'user', (eb) =>
     eb('email', '=', userOne.email)

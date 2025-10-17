@@ -1,4 +1,5 @@
 import { authContext, requestContext } from '@tests/utils/context'
+import { AuthService } from '@server/services/authService'
 import { createCallerFactory, router } from '..'
 import { authenticatedProcedure } from '.'
 
@@ -9,20 +10,21 @@ const routes = router({
 const createCaller = createCallerFactory(routes)
 
 const VALID_TOKEN = 'valid-token'
-
-vi.mock('jsonwebtoken', () => ({
-  default: {
-    verify: (token: string) => {
-      if (token !== VALID_TOKEN) throw new Error('Invalid token')
-
-      return { user: { id: 2, name: 'some', roleName: 'user' } }
-    },
-  },
-}))
+const INVALID_TOKEN = 'invalid-token'
 
 // we do not need a database for this test
 const db = {} as any
-const authenticated = createCaller(authContext({ db }))
+
+const fakeAuthService = {
+  verifyAccessToken: (token: string) => {
+    if (token !== VALID_TOKEN) throw new Error('Invalid token')
+    return { user: { id: 2, name: 'some', roleName: 'user' } }
+  },
+} as unknown as AuthService
+
+const authenticated = createCaller(
+  authContext({ db, authService: fakeAuthService })
+)
 
 it('should pass if user is already authenticated', async () => {
   const response = await authenticated.testCall()
@@ -33,8 +35,9 @@ it('should pass if user is already authenticated', async () => {
 it('should pass if user provides a valid token', async () => {
   const usingValidToken = createCaller({
     db,
+    authService: fakeAuthService,
     req: {
-      header: () => `Bearer ${VALID_TOKEN}`,
+      headers: { authorization: `Bearer ${VALID_TOKEN}` },
     } as any,
   })
 
@@ -44,7 +47,7 @@ it('should pass if user provides a valid token', async () => {
 })
 
 it('should throw an error if user is not logged in', async () => {
-  const unauthenticated = createCaller(requestContext({ db }))
+  const unauthenticated = createCaller(requestContext({ db, authService: fakeAuthService }))
 
   await expect(unauthenticated.testCall()).rejects.toThrow(
     // any authentication-like error
@@ -57,6 +60,7 @@ it('should throw an error if it is run without access to headers', async () => {
     requestContext({
       db,
       req: undefined as any,
+      authService: fakeAuthService
     })
   )
 
@@ -67,8 +71,9 @@ it('should throw an error if user provides invalid token', async () => {
   const invalidToken = createCaller(
     requestContext({
       db,
+      authService: fakeAuthService,
       req: {
-        header: () => 'Bearer invalid-token',
+        headers: { authorization: `Bearer ${INVALID_TOKEN}` },
       } as any,
     })
   )

@@ -34,7 +34,7 @@ export type MenuUpdateable = Pick<
 
 export const menuSchemaGetByTypeDates = z.object({
   type: mealTypeSchema,
-  dates: z.array(z.coerce.date()),
+  dates: z.array(dateSchema),
 })
 
 export type MenuSchemaGetByTypeDates = z.infer<typeof menuSchemaGetByTypeDates>
@@ -48,4 +48,4 @@ export type MenuWithMeal = z.infer<typeof menuWithMealSchema>
 
 export type GroupedMenus = Record<string, MenuWithMeal[]>
 
-// 
+//

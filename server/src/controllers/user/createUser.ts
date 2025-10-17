@@ -1,14 +1,12 @@
 import { userSchemaWithRoleName, type UserPublic } from '@server/entities/user'
-import { userRepository } from '@server/repositories/userRepository'
 import { roleRepository } from '@server/repositories/roleRepository'
 import { adminAuthProcedure } from '@server/trpc/adminAuthProcedure'
 import provideRepos from '@server/trpc/provideRepos'
 import { TRPCError } from '@trpc/server'
 import { assertError } from '@server/utils/errors'
-import { getPasswordHash } from '@server/utils/hash'
 
 export default adminAuthProcedure
-  .use(provideRepos({ userRepository, roleRepository }))
+  .use(provideRepos({ roleRepository }))
   .input(
     userSchemaWithRoleName.pick({
       email: true,
@@ -17,41 +15,42 @@ export default adminAuthProcedure
       roleName: true,
     })
   )
-  .mutation(async ({ input: user, ctx: { repos } }): Promise<UserPublic> => {
-    const passwordHash = await getPasswordHash(user.password)
+  .mutation(
+    async ({
+      input: user,
+      ctx: { authService, repos },
+    }): Promise<UserPublic> => {
+      const roleId = await repos.roleRepository.getRoleIdByName(user.roleName)
 
-    const roleId = await repos.roleRepository.getRoleIdByName(user.roleName)
+      if (!roleId) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'Incorrect roleName. Please try again.',
+        })
+      }
 
-    if (!roleId) {
-      throw new TRPCError({
-        code: 'UNAUTHORIZED',
-        message: 'Incorrect roleName. Please try again.',
-      })
-    }
+      let newUser: UserPublic
 
-    const userCreated = await repos.userRepository
-      .create({
-        email: user.email,
-        name: user.name,
-        password: passwordHash,
-        roleId: roleId.id,
-      })
-      .catch((error: unknown) => {
+      try {
+        newUser = await authService.signup(
+          user.email,
+          user.name,
+          user.password,
+          roleId.id
+        )
+      } catch (error) {
         assertError(error)
-
-        // wrapping an ugly error into a user-friendly one
-        if (error.message.includes('duplicate key')) {
-          throw new TRPCError({
-            code: 'BAD_REQUEST',
-            message: 'User with this email already exists',
-            cause: error,
-          })
+        if (error instanceof TRPCError) {
+          throw error
         }
 
-        throw error
-      })
-    return {
-      id: userCreated.id,
-      name: userCreated.name,
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'User signup failed',
+          cause: error,
+        })
+      }
+
+      return newUser
     }
-  })
+  )

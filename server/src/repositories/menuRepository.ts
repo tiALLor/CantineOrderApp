@@ -5,6 +5,7 @@ import {
   type MenuSchemaGetByTypeDates,
   type MenuPublic,
   type MenuWithMeal,
+  menuWithMealSchema,
 } from '@server/entities/menu'
 import { prefixTable } from '@server/utils/strings'
 import type { Insertable } from 'kysely'
@@ -62,7 +63,7 @@ export function menuRepository(db: Database) {
           ...prefixTable('menu', menuKeyPublic),
           'meal.name',
           'meal.priceEur',
-          'meal.type',
+          'meal.type' as const,
         ])
         .where('menu.date', 'in', record.dates)
         .where('meal.type', '=', record.type)
@@ -70,7 +71,7 @@ export function menuRepository(db: Database) {
 
       if (!menus) return []
 
-      return menus as MenuWithMeal[]
+      return menus.map((menu) => menuWithMealSchema.parse(menu))
     },
 
     async deleteMenuMealById(id: number): Promise<MenuPublic | undefined> {

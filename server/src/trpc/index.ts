@@ -8,9 +8,11 @@ import { ZodError } from 'zod'
 import { fromZodError } from 'zod-validation-error'
 import type { Repositories } from '@server/repositories'
 import logger from '@server/utils/logger'
+import type { AuthService } from '../services/authService'
 
 export type Context = {
   db: Database
+  authService: AuthService
 
   // Express types. These are optional as
   // vast majority of requests do not need them.
@@ -25,7 +27,7 @@ export type Context = {
   repos?: Partial<Repositories>
 }
 
-export type ContextMinimal = Pick<Context, 'db'>
+export type ContextMinimal = Pick<Context, 'db' | 'authService'>
 
 export const t = initTRPC.context<Context>().create({
   transformer: SuperJSON,

@@ -2,23 +2,24 @@ import { z } from 'zod'
 import type { Insertable, Selectable } from 'kysely'
 import type { User } from '@server/database/types'
 import { ROLES } from './role'
-import { idSchema } from './shared'
+import { idSchema, passwordSchema } from './shared'
 
+// ===========================================
 // main schema
+// ===========================================
 export const userSchema = z.object({
   id: idSchema,
   name: z.string().trim().min(1).max(50),
   email: z.string().toLowerCase().trim().email(),
-  password: z
-    .string()
-    .min(8, 'Password must be at least 8 characters long')
-    .max(64, 'Password must be at most 64 characters long'),
+  password: passwordSchema,
   roleId: z.number().positive().max(ROLES.length),
 })
 
 export const userKeyAll = Object.keys(userSchema.shape) as (keyof User)[]
 
+// ===========================================
 // insertable
+// ===========================================
 export const userInsertable = userSchema.pick({
   name: true,
   email: true,
@@ -28,8 +29,9 @@ export const userInsertable = userSchema.pick({
 
 export type UserInsertable = Insertable<User>
 
+// ===========================================
 // updateable
-
+// ===========================================
 export const changePasswordSchema = z
   .object({
     oldPassword: z.string().min(8).max(64),
@@ -43,21 +45,25 @@ export const changePasswordSchema = z
 
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>
 
+// ===========================================
 // public
-
-export const userKeyPublic = ['id', 'name'] as const
+// ===========================================
+export const userKeyPublic = ['id', 'name', ] as const
 
 export type UserPublic = Pick<Selectable<User>, (typeof userKeyPublic)[number]>
 
+// ===========================================
 // user with Role name
+// ===========================================
 export const userSchemaWithRoleName = userSchema.extend({
   roleName: z.enum(ROLES),
 })
 
 export type UserWithRoleName = z.infer<typeof userSchemaWithRoleName>
 
+// ===========================================
 // authUser
-
+// ===========================================
 export const authUserSchemaWithRoleName = userSchemaWithRoleName.pick({
   id: true,
   name: true,
@@ -65,3 +71,14 @@ export const authUserSchemaWithRoleName = userSchemaWithRoleName.pick({
 })
 
 export type AuthUserWithRoleName = z.infer<typeof authUserSchemaWithRoleName>
+
+// ===========================================
+// loginSchema
+// ===========================================
+
+export const loginSchema = z.object({
+  email: z.string().toLowerCase().trim().email(),
+  password: z.string().trim().min(1),
+})
+
+export type LoginData = z.infer<typeof loginSchema>

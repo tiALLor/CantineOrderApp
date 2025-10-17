@@ -7,21 +7,25 @@ import { authContext } from '@tests/utils/context'
 import { random } from '@tests/utils/random'
 import { authUserSchemaWithRoleName } from '@server/entities/user'
 import userRouter from '@server/controllers/user'
+import { AuthService } from '@server/services/authService'
 
 const db = await wrapInRollbacks(createTestDatabase())
+const authService = new AuthService(db)
+
 const createCaller = createCallerFactory(userRouter)
 
 const [userOne] = await insertAll(db, 'user', [fakeUser({ roleId: 1 })])
 
 const { createUser } = createCaller(
   authContext(
-    { db },
+    { db, authService },
     authUserSchemaWithRoleName.parse({ ...userOne, roleName: 'admin' })
   )
 )
 
-it('should create a user with role chef', async () => {
+it('should create a user with role chef and valid email and password', async () => {
   const userData = fakeUser({
+    password: 'Password.123',
     roleId: 2,
   })
 
@@ -50,6 +54,7 @@ it('should require a valid email', async () => {
     createUser({
       ...fakeUser({
         email: 'user-email-invalid',
+        password: 'Password.123',
       }),
       roleName: 'chef',
     })
@@ -61,6 +66,39 @@ it('should require a password with at least 8 characters', async () => {
     createUser({
       ...fakeUser({
         password: 'pass12',
+      }),
+      roleName: 'chef',
+    })
+  ).rejects.toThrow(/password/i)
+})
+
+it('should require a password with at least 1 uppercase', async () => {
+  await expect(
+    createUser({
+      ...fakeUser({
+        password: 'password.123',
+      }),
+      roleName: 'chef',
+    })
+  ).rejects.toThrow(/password/i)
+})
+
+it('should require a password with at least 1 lowercase', async () => {
+  await expect(
+    createUser({
+      ...fakeUser({
+        password: 'PASSWORD.123',
+      }),
+      roleName: 'chef',
+    })
+  ).rejects.toThrow(/password/i)
+})
+
+it('should require a password with at least 1 special case', async () => {
+  await expect(
+    createUser({
+      ...fakeUser({
+        password: 'Password123',
       }),
       roleName: 'chef',
     })

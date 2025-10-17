@@ -7,8 +7,11 @@ import { authContext } from '@tests/utils/context'
 import { authUserSchemaWithRoleName } from '@server/entities/user'
 import userRouter from '@server/controllers/user'
 import { getPasswordHash } from '@server/utils/hash'
+import { AuthService } from '@server/services/authService'
 
 const db = await wrapInRollbacks(createTestDatabase())
+const authService = new AuthService(db)
+
 const createCaller = createCallerFactory(userRouter)
 
 const PASSWORD_CORRECT = 'Password.098'
@@ -21,7 +24,7 @@ const [userOne] = await insertAll(db, 'user', [
 
 const { changePassword } = createCaller(
   authContext(
-    { db },
+    { db, authService },
     authUserSchemaWithRoleName.parse({ ...userOne, roleName: 'user' })
   )
 )

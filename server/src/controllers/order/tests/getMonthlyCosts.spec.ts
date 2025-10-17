@@ -6,8 +6,12 @@ import { fakeUser, fakeMeal, fakeMenu } from '@server/entities/tests/fakes'
 import { authContext } from '@tests/utils/context'
 import { authUserSchemaWithRoleName } from '@server/entities/user'
 import orderRouter from '@server/controllers/order'
+import type { AuthService } from '@server/services/authService'
 
 const db = await wrapInRollbacks(createTestDatabase())
+
+const authService = {} as AuthService
+
 const createCaller = createCallerFactory(orderRouter)
 
 const [userOne] = await insertAll(db, 'user', [
@@ -36,7 +40,7 @@ await insertAll(db, 'menu', [
 
 const { getMonthlyCosts } = createCaller(
   authContext(
-    { db },
+    { db, authService },
     authUserSchemaWithRoleName.parse({ ...userOne, roleName: 'user' })
   )
 )

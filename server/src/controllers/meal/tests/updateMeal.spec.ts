@@ -6,8 +6,12 @@ import { fakeUser, fakeMeal } from '@server/entities/tests/fakes'
 import { authContext } from '@tests/utils/context'
 import { authUserSchemaWithRoleName } from '@server/entities/user'
 import mealRouter from '@server/controllers/meal'
+import type { AuthService } from '@server/services/authService'
 
 const db = await wrapInRollbacks(createTestDatabase())
+
+const authService = {} as AuthService
+
 const createCaller = createCallerFactory(mealRouter)
 
 const [userOne] = await insertAll(db, 'user', [fakeUser({ roleId: 2 })])
@@ -19,7 +23,7 @@ const [mealOne] = await insertAll(db, 'meal', [
 
 const { updateMeal } = createCaller(
   authContext(
-    { db },
+    { db, authService },
     authUserSchemaWithRoleName.parse({ ...userOne, roleName: 'chef' })
   )
 )

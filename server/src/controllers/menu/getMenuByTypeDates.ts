@@ -15,10 +15,13 @@ export default publicProcedure
 
       const groupedByDate = menus.reduce(
         (acc, menu) => {
-          const dateKey =
-            typeof menu.date === 'string'
-              ? menu.date
-              : menu.date.toISOString().slice(0, 10)
+          // if returned date could be a string
+          // const dateKey =
+          //   typeof menu.date === 'string'
+          //     ? menu.date
+          //     : menu.date.toISOString().slice(0, 10)
+
+          const dateKey = menu.date.toISOString().slice(0, 10)
 
           acc[dateKey] ??= []
           acc[dateKey].push(menu)
