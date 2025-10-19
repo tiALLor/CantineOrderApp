@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { login } from '@/utils/auth'
 import { ref } from 'vue'
 import PageForm from '@/components/PageForm.vue'
 import { FwbAlert, FwbButton, FwbInput } from 'flowbite-vue'
 import { useRouter } from 'vue-router'
 import useErrorMessage from '@/composables/useErrorMessage'
+import { useUserAuthStore } from '@/stores/userAuthStore'
 
 const router = useRouter()
+
+const userAuthStore = useUserAuthStore()
 
 const userForm = ref({
   email: '',
@@ -14,7 +16,7 @@ const userForm = ref({
 })
 
 const [submitLogin, errorMessage] = useErrorMessage(async () => {
-  await login(userForm.value)
+  await userAuthStore.login(userForm.value)
 
   // Support redirects back to the page the user was on before logging in
   // if it is provided in the query string:

@@ -5,7 +5,7 @@ import { addDays, format } from 'date-fns'
 import Calendar from '@/components/Calendar.vue'
 import MenuTable from '@/components/MenuTable.vue'
 import OrderTable from '@/components/OrderTable.vue'
-import { useUserAuthStore } from '@/stores/user'
+import { useUserAuthStore } from '@/stores/userAuthStore'
 import type { MealType } from '@server/shared/types'
 
 const userAuthStore = useUserAuthStore()
@@ -45,7 +45,7 @@ const maxDate = ref(undefined)
       Our menu for {{ format(date, 'yyyy-MM-dd') }}:
     </h2>
   </div>
-  <div v-if="!userAuthStore.isLoggedIn" aria-label="our menu">
+  <div v-if="!userAuthStore.isAuthenticated" aria-label="our menu">
     <div>
       <fwb-tabs v-model="activeTab" variant="underline" class="p-5">
         <fwb-tab v-for="tab in tabs" :key="tab.title" :name="tab.name" :title="tab.title">
@@ -66,7 +66,7 @@ const maxDate = ref(undefined)
       </div>
     </div>
   </div>
-  <div v-if="userAuthStore.isLoggedIn">
+  <div v-if="userAuthStore.isAuthenticated">
     <OrderTable :date="date" />
   </div>
 </template>

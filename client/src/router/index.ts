@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import MainLayout from '@/layouts/MainLayout.vue'
 import { authenticateUser, authenticateChef, authenticateAdmin } from './guards'
+import { useUserAuthStore } from '@/stores/userAuthStore'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -78,6 +79,19 @@ const router = createRouter({
       redirect: '/',
     },
   ],
+})
+
+router.beforeEach(async () => {
+  const userAuthStore = useUserAuthStore()
+
+  // Initialize auth if token exists but no user
+  if (userAuthStore.accessToken && !userAuthStore.authUser) {
+    try {
+      await userAuthStore.getCurrentUser()
+    } catch (error) {
+      userAuthStore.logout()
+    }
+  }
 })
 
 export default router

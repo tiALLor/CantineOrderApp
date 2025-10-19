@@ -2,7 +2,7 @@ import './assets/style.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import { useUserAuthStore } from './stores/user'
+import { useUserAuthStore } from './stores/userAuthStore'
 import VCalendar from 'v-calendar'
 import 'v-calendar/style.css'
 

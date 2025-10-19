@@ -3,26 +3,26 @@ import { publicProcedure } from '@server/trpc'
 import { TRPCError } from '@trpc/server'
 import { assertError } from '@server/utils/errors'
 
-// remove roleId from input and adjust the tests
 export default publicProcedure
   .input(
     userSchema.pick({
       email: true,
       password: true,
       name: true,
-      roleId: true,
     })
   )
   .mutation(
     async ({ input: user, ctx: { authService } }): Promise<UserPublic> => {
       let newUser: UserPublic
 
+      const userRoleId = 3
+
       try {
         newUser = await authService.signup(
           user.email,
           user.name,
           user.password,
-          user.roleId
+          userRoleId
         )
       } catch (error) {
         assertError(error)

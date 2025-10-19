@@ -5,8 +5,8 @@ import { fakeUser } from './fakeData'
 import type { Page } from '@playwright/test'
 import superjson from 'superjson'
 // import testUser with admin role
-import { testUser } from '@server/shared/forTests'
-import type { EntityRole } from '@server/shared/types'
+import { testUserAsAdmin } from '@server/shared/forTests'
+import type { AuthUserWithRoleName, EntityRole } from '@server/shared/types'
 
 let accessToken: string | null = null
 
@@ -17,11 +17,9 @@ function setAccessToken(token: string | null) {
 declare global {
   interface Window {
     __AUTH_STORE__: {
-      storeTokenAndUser: (
-        accessToken: string,
-        user: { id: number; name: string; roleName: string }
-      ) => void
-      isLoggedIn: boolean
+      authUser: AuthUserWithRoleName
+      accessToken: string
+      isAuthenticated: boolean
     }
   }
 }
@@ -43,9 +41,11 @@ export const trpc = createTRPCProxyClient<AppRouter>({
 type UserCreate = Parameters<typeof trpc.user.createUser.mutate>[0]
 
 export async function signInUser(userData: UserCreate = fakeUser()): Promise<void> {
-  const loginResponse = await trpc.user.login.mutate(testUser)
+  const loginResponse = await trpc.user.login.mutate(testUserAsAdmin)
 
   setAccessToken(loginResponse.accessToken)
+
+  // if user do not exist create or catch
   try {
     await trpc.user.createUser.mutate(userData)
   } catch (error) {
@@ -69,6 +69,7 @@ type UserLoginAuthed = UserLogin & {
  * user login information.
  */
 export async function loginNewUser(userLogin: UserLogin = fakeUser()): Promise<UserLoginAuthed> {
+  // // if user do not exist create or catch
   try {
     await trpc.user.signup.mutate(userLogin)
   } catch (error) {
@@ -113,18 +114,24 @@ export async function asUser<T extends any>(
   // we should be fine.
   await page.evaluate(
     ({ accessToken, user }) => {
-      window.__AUTH_STORE__.storeTokenAndUser(accessToken, {
+      //   window.__AUTH_STORE__.storeTokenAndUser(accessToken, {
+      //     id: user.id,
+      //     name: user.name,
+      //     roleName: user.roleName,
+      // })
+      window.__AUTH_STORE__.authUser = {
         id: user.id,
         name: user.name,
         roleName: user.roleName,
-      })
+      }
+      window.__AUTH_STORE__.accessToken = accessToken
     },
     { accessToken: user.accessToken, user }
   )
   const callbackResult = await callback(user)
 
   await page.evaluate(() => {
-    localStorage.removeItem('token')
+    localStorage.removeItem('accessToken')
   })
   accessToken = null
 

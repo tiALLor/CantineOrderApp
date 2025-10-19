@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import { z } from 'zod'
 import type { Secret } from 'jsonwebtoken'
-import { testUser } from './shared/forTests'
+import { testUserAsAdmin } from './shared/forTests'
 
 const { env } = process
 
@@ -63,7 +63,7 @@ const schema = z
         .toLowerCase()
         .default(() => {
           if (isDevTest) {
-            return testUser.email
+            return testUserAsAdmin.email
           }
 
           throw new Error('You must provide a ADMIN_EMAIL in a production env!')
@@ -74,7 +74,7 @@ const schema = z
         .max(40)
         .default(() => {
           if (isDevTest) {
-            return testUser.password
+            return testUserAsAdmin.password
           }
 
           throw new Error(

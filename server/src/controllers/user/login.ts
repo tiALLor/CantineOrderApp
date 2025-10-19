@@ -1,6 +1,6 @@
 import { publicProcedure } from '@server/trpc'
 import { TRPCError } from '@trpc/server'
-import { loginSchema, type UserPublic } from '@server/entities/user'
+import { loginSchema, type AuthUserWithRoleName } from '@server/entities/user'
 import { assertError } from '@server/utils/errors'
 import logger from '@server/utils/logger'
 import { cookieOptions } from '@server/utils/cookies'
@@ -11,7 +11,7 @@ export default publicProcedure
     async ({
       input: { email, password },
       ctx,
-    }): Promise<{ user: UserPublic; accessToken: string }> => {
+    }): Promise<{ user: AuthUserWithRoleName; accessToken: string }> => {
       try {
         const { user, accessToken, refreshToken } =
           await ctx.authService!.login(email, password)

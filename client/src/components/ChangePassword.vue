@@ -6,7 +6,7 @@ import { FwbInput, FwbButton, FwbAlert } from 'flowbite-vue'
 import StdFooter from '@/components/StdFooter.vue'
 import AlertMessages from '@/components/AlertMessages.vue'
 import useErrorMessage from '@/composables/useErrorMessage'
-import { useUserAuthStore } from '@/stores/user'
+import { useUserAuthStore } from '@/stores/userAuthStore'
 
 const changePasswordForm = ref({
   oldPassword: '',
@@ -33,7 +33,8 @@ const [changePassword, errorMessage] = useErrorMessage(async () => {
 
   const userAuthStore = useUserAuthStore()
 
-  userAuthStore.clearTokenAndUser()
+  // optionally we can logout the user after password change
+  // userAuthStore.logout()
 })
 </script>
 

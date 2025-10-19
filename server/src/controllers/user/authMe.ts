@@ -2,12 +2,12 @@ import config from '@server/config'
 import { authenticatedProcedure } from '@server/trpc/authenticatedProcedure'
 import { TRPCError } from '@trpc/server'
 import { assertError } from '@server/utils/errors'
-import type { UserPublic } from '@server/shared/types'
+import type { AuthUserWithRoleName } from '@server/shared/types'
 import { z } from 'zod'
 
 export default authenticatedProcedure
   .input(z.object({}))
-  .mutation(async ({ ctx }): Promise<UserPublic> => {
+  .mutation(async ({ ctx }): Promise<AuthUserWithRoleName> => {
     // we depend on having an Express request object
     if (!ctx.req) {
       const message =
@@ -39,7 +39,7 @@ export default authenticatedProcedure
     try {
       const data = await ctx.authService.verifyAccessToken(token)
 
-      const authUser: UserPublic = data.user
+      const authUser: AuthUserWithRoleName = data.user
 
       if (!authUser) {
         throw new TRPCError({

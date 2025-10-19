@@ -107,7 +107,7 @@ it('should require a password with at least 1 special case', async () => {
 
 it('stores lowercased email', async () => {
   const userData = fakeUser({
-    email: 'some@email.com',
+    email: 'someValid@email.com',
   })
 
   await createUser({
@@ -118,10 +118,10 @@ it('stores lowercased email', async () => {
 
   // get user with original lowercase email
   const [userInDatabase] = await selectAll(db, 'user', (eb) =>
-    eb('email', '=', userData.email)
+    eb('email', '=', userData.email.toLowerCase())
   )
 
-  expect(userInDatabase.email).toBe('some@email.com')
+  expect(userInDatabase.email).toBe('somevalid@email.com')
 })
 
 it('stores email with trimmed whitespace', async () => {

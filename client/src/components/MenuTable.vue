@@ -7,7 +7,7 @@ import { format } from 'date-fns'
 import AlertMessages from '@/components/AlertMessages.vue'
 import useErrorMessage from '@/composables/useErrorMessage'
 import MenuModalBody from '@/components/MenuModalBody.vue'
-import { useUserAuthStore } from '@/stores/user'
+import { useUserAuthStore } from '@/stores/userAuthStore'
 
 const userAuthStore = useUserAuthStore()
 
@@ -61,7 +61,7 @@ onMounted(fetchMenu)
 </script>
 
 <template>
-  <div v-if="userAuthStore.isLoggedIn">
+  <div v-if="userAuthStore.isAuthenticated">
     <div class="p-5">
       <fwb-button color="default" @click="showAddToMenuModal()" :disabled="isEditDisabled"
         >Add {{ type }}</fwb-button
@@ -96,14 +96,14 @@ onMounted(fetchMenu)
       </div>
 
       <!-- Action Buttons -->
-      <div v-if="userAuthStore.isLoggedIn" class="mt-2 flex w-full gap-2 sm:mt-0 sm:w-auto">
+      <div v-if="userAuthStore.isAuthenticated" class="mt-2 flex w-full gap-2 sm:mt-0 sm:w-auto">
         <fwb-button size="sm" color="pink" @click="removeMeal(meal.id)" :disabled="isEditDisabled">
           Remove
         </fwb-button>
       </div>
     </div>
   </div>
-  <div v-if="userAuthStore.isLoggedIn">
+  <div v-if="userAuthStore.isAuthenticated">
     <MenuModalBody
       :isShowModal="isShowAddToMenuModal"
       :date="date"

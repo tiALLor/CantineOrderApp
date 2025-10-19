@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { fakeUser } from 'utils/fakeData'
 // import testUser with admin role
-import { testUser } from '@server/shared/forTests'
+import { testUserAsAdmin } from '@server/shared/forTests'
 
 const user = fakeUser()
 
@@ -15,8 +15,8 @@ test.describe('login and create user', () => {
 
     // We would prefer using getByRole, but flowbite components are
     // not linking labels with inputs
-    await formLogin.locator('input[type="email"]').fill(testUser.email)
-    await formLogin.locator('input[type="password"]').fill(testUser.password)
+    await formLogin.locator('input[type="email"]').fill(testUserAsAdmin.email)
+    await formLogin.locator('input[type="password"]').fill(testUserAsAdmin.password)
     await formLogin.locator('button[type="submit"]').click()
 
     await expect(page.getByRole('link', { name: 'Create user' })).toBeVisible()

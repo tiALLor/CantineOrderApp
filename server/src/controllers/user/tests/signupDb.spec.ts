@@ -64,7 +64,7 @@ it('should require a password with at least 8 characters', async () => {
 
 it('stores lowercased email', async () => {
   const userData = fakeUser({
-    email: 'some@email.com',
+    email: 'someValid@email.com',
   })
 
   await signup({
@@ -74,10 +74,10 @@ it('stores lowercased email', async () => {
 
   // get user with original lowercase email
   const [userInDatabase] = await selectAll(db, 'user', (eb) =>
-    eb('email', '=', userData.email)
+    eb('email', '=', userData.email.toLocaleLowerCase())
   )
 
-  expect(userInDatabase.email).toBe('some@email.com')
+  expect(userInDatabase.email).toBe('somevalid@email.com')
 })
 
 it('stores email with trimmed whitespace', async () => {

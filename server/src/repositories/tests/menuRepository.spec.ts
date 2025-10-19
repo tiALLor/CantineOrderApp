@@ -106,7 +106,7 @@ describe('get menu by days and type', () => {
       expect.arrayContaining([
         {
           ...fakeMenu({
-            date: '2025-03-23',
+            date: new Date('2025-03-23'),
             mealId: mealTwo.id,
             id: expect.any(Number),
             ...omit(mealTwo, ['id']),
@@ -114,7 +114,7 @@ describe('get menu by days and type', () => {
         },
         {
           ...fakeMenu({
-            date: '2025-03-23',
+            date: new Date('2025-03-23'),
             mealId: mealTree.id,
             id: expect.any(Number),
             ...omit(mealTree, ['id']),
@@ -122,7 +122,7 @@ describe('get menu by days and type', () => {
         },
         {
           ...fakeMenu({
-            date: '2025-03-24',
+            date: new Date('2025-03-24'),
             mealId: mealTwo.id,
             id: expect.any(Number),
             ...omit(mealTwo, ['id']),

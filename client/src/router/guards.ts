@@ -1,9 +1,9 @@
-import { useUserAuthStore } from '@/stores/user'
+import { useUserAuthStore } from '@/stores/userAuthStore'
 
 export const authenticateUser = () => {
   const userAuthStore = useUserAuthStore()
 
-  if (!userAuthStore.isLoggedIn) return { name: 'Login' }
+  if (!userAuthStore.isAuthenticated) return { name: 'Login' }
 
   return true
 }
@@ -11,7 +11,7 @@ export const authenticateUser = () => {
 export const authenticateChef = () => {
   const userAuthStore = useUserAuthStore()
 
-  if (!userAuthStore.isLoggedIn) return { name: 'Login' }
+  if (!userAuthStore.isAuthenticated) return { name: 'Login' }
 
   if (userAuthStore.authUser?.roleName !== 'chef') return { name: 'Menu' }
 
@@ -20,7 +20,7 @@ export const authenticateChef = () => {
 
 export const authenticateAdmin = () => {
   const userAuthStore = useUserAuthStore()
-  if (!userAuthStore.isLoggedIn) return { name: 'Login' }
+  if (!userAuthStore.isAuthenticated) return { name: 'Login' }
 
   if (userAuthStore.authUser?.roleName !== 'admin') return { name: 'Menu' }
 

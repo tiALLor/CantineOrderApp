@@ -5,7 +5,7 @@ import { asUser } from 'utils/api'
 const user = fakeUser()
 
 test('user can change a password', async ({ page }) => {
-  const newPassword = 'newPassword12345'
+  const newPassword = 'newPassword.12345'
   await asUser(page, user, async () => {
     // Given (ARRANGE)
     const logoutLink = page.getByRole('link', { name: 'Logout' })
@@ -26,7 +26,7 @@ test('user can change a password', async ({ page }) => {
     const successMessage = page.getByTestId('successMessage')
     await expect(successMessage).toBeVisible()
 
-    // await logoutLink.click()
+    await logoutLink.click()
     await expect(logoutLink).toBeHidden()
 
     // Confirm

@@ -21,7 +21,7 @@ describe('userSchema - schema parse', () => {
       id: 111,
       name: 'John Doe',
       email: 'ABF@mail.com',
-      password: 'OK password ',
+      password: 'OK password.123 ',
       roleId: 3,
     }
 
@@ -117,14 +117,14 @@ describe('insertableUser', () => {
     const record = {
       name: 'John Doe',
       email: 'ABF@mail.com',
-      password: 'OK password ',
+      password: 'OK password.123 ',
       roleId: 3,
     }
 
     expect(userInsertable.parse(record)).toEqual({
       name: 'John Doe',
       email: 'abf@mail.com',
-      password: 'OK password ',
+      password: 'OK password.123 ',
       roleId: 3,
     })
   })
