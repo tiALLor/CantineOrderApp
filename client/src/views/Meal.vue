@@ -15,19 +15,21 @@ const tabs: tab[] = [
   { name: 'main', title: 'Mains', mealType: 'main' },
 ]
 
-const activeTab = ref('soup')
+const activeTab = ref(tabs[0].name)
 </script>
 
 <template>
-  <div class="p-5">
-    <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">Manage meals:</h2>
-    <p class="mt-4 text-gray-500 dark:text-gray-400 lg:max-w-md">
-      Attention: You can delete only a meal not used in menu.
-    </p>
+  <div>
+    <div class="p-5">
+      <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">Manage meals:</h2>
+      <p class="mt-4 text-gray-500 dark:text-gray-400 lg:max-w-md">
+        Attention: You can delete only a meal not used in menu.
+      </p>
+    </div>
+    <fwb-tabs v-model="activeTab" variant="underline" class="px-5">
+      <fwb-tab v-for="tab in tabs" :key="tab.name" :name="tab.name" :title="tab.title">
+        <MealTable :type="tab.mealType" />
+      </fwb-tab>
+    </fwb-tabs>
   </div>
-  <fwb-tabs v-model="activeTab" variant="underline" class="p-5">
-    <fwb-tab v-for="tab in tabs" :key="tab.title" :name="tab.name" :title="tab.title">
-      <MealTable :type="tab.mealType" />
-    </fwb-tab>
-  </fwb-tabs>
 </template>

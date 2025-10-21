@@ -18,7 +18,7 @@ type LoginResponse = {
 export const useUserAuthStore = defineStore('auth', () => {
   const authUser = ref<AuthUserWithRoleName | null>(null)
   // access token stored in memory
-  const accessToken = ref<string | null>(localStorage.getItem('accessToken'))
+  const accessToken = ref<string | null>(sessionStorage.getItem('accessToken'))
   const isLoading = ref(false)
   const error = ref<string | null>(null)
 
@@ -36,7 +36,7 @@ export const useUserAuthStore = defineStore('auth', () => {
 
       accessToken.value = response.accessToken
       // access token stored in memory
-      localStorage.setItem('accessToken', response.accessToken)
+      sessionStorage.setItem('accessToken', response.accessToken)
 
       const decodedPayload = jwtDecode<JwtPayload>(accessToken.value)
 
@@ -87,7 +87,7 @@ export const useUserAuthStore = defineStore('auth', () => {
 
       accessToken.value = response.accessToken
 
-      localStorage.setItem('accessToken', response.accessToken)
+      sessionStorage.setItem('accessToken', response.accessToken)
 
       return response
     } catch (err) {
@@ -108,7 +108,7 @@ export const useUserAuthStore = defineStore('auth', () => {
     } finally {
       authUser.value = null
       accessToken.value = null
-      localStorage.removeItem('accessToken')
+      sessionStorage.removeItem('accessToken')
     }
   }
 

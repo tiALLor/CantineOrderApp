@@ -54,11 +54,16 @@ test.describe.serial('testing place order and order summary in sequence', () => 
       await form.locator('#mealName').fill(soupForTestFirst.name)
       await form.locator('#priceEUR').fill(String(soupForTestFirst.priceEur))
       await form.getByRole('button', { name: 'Add soup' }).click()
+
       // add Second soup
-      await form.locator('#mealName').fill(soupForTestSecond.name)
-      await form.locator('#priceEUR').fill(String(soupForTestSecond.priceEur))
-      await form.getByRole('button', { name: 'Add soup' }).click()
-      await page.getByLabel('close').click()
+      await page.getByRole('button', { name: 'Add soup' }).first().click()
+      await expect(page.getByText('Add soup').nth(1)).toBeVisible()
+
+      const form2 = page.getByRole('form', { name: 'mealForm' })
+
+      await form2.locator('#mealName').fill(soupForTestSecond.name)
+      await form2.locator('#priceEUR').fill(String(soupForTestSecond.priceEur))
+      await form2.getByRole('button', { name: 'Add soup' }).click()
 
       await page.locator('li').filter({ hasText: 'Soups' }).locator('div').click()
 
@@ -74,11 +79,14 @@ test.describe.serial('testing place order and order summary in sequence', () => 
       await form.locator('#mealName').fill(mainForTestFirst.name)
       await form.locator('#priceEUR').fill(String(mainForTestFirst.priceEur))
       await form.getByRole('button', { name: 'Add main' }).click()
+
       // add Second main
+      await page.getByRole('button', { name: 'Add main' }).first().click()
+      await expect(page.getByText('Add main').nth(1)).toBeVisible()
+
       await form.locator('#mealName').fill(mainForTestSecond.name)
       await form.locator('#priceEUR').fill(String(mainForTestSecond.priceEur))
       await form.getByRole('button', { name: 'Add main' }).click()
-      await page.getByLabel('close').click()
 
       // Arrange menu part - add soup
       const menuLink = page.getByRole('link', { name: 'Menu' })
@@ -91,10 +99,13 @@ test.describe.serial('testing place order and order summary in sequence', () => 
       await expect(page.getByLabel('Add Menu Modal Header soup')).toBeVisible()
 
       await page.locator('label').filter({ hasText: soupForTestFirst.name }).click()
-      await page.getByRole('button', { name: 'Add meal to menu' }).click()
+      await page.getByRole('button', { name: 'Add soup to menu' }).click()
+
+
+
+      await page.getByRole('button', { name: 'Add soup', exact: true  }).click()
       await page.locator('label').filter({ hasText: soupForTestSecond.name }).click()
-      await page.getByRole('button', { name: 'Add meal to menu' }).click()
-      await page.getByLabel('close').click()
+      await page.getByRole('button', { name: 'Add soup to menu' }).click()
 
       // Arrange menu part - add soup
       await page.locator('li').filter({ hasText: 'Mains' }).locator('div').click()
@@ -102,11 +113,14 @@ test.describe.serial('testing place order and order summary in sequence', () => 
       await expect(page.getByLabel('Add Menu Modal Header main')).toBeVisible()
 
       await page.locator('label').filter({ hasText: mainForTestFirst.name }).click()
-      await page.getByRole('button', { name: 'Add meal to menu' }).click()
-      await page.locator('label').filter({ hasText: mainForTestSecond.name }).click()
-      await page.getByRole('button', { name: 'Add meal to menu' }).click()
+      await page.getByRole('button', { name: 'Add main to menu' }).click()
 
-      await page.getByLabel('close').click()
+
+      await page.getByRole('button', { name: 'Add main', exact: true}).click()
+      await expect(page.getByLabel('Add Menu Modal Header main')).toBeVisible()
+      await page.locator('label').filter({ hasText: mainForTestSecond.name }).click()
+      await page.getByRole('button', { name: 'Add main to menu' }).click()
+
 
       await expect(page.getByTestId(`row-${mainForTestFirst.name}`)).toBeVisible()
       await expect(page.getByTestId(`row-${mainForTestSecond.name}`)).toBeVisible()
@@ -188,7 +202,7 @@ test.describe.serial('testing place order and order summary in sequence', () => 
       await summaryLink.click()
 
       await expect(page.locator('[data-test-id="dp-input"]')).toBeVisible()
-      await expect(page.getByRole('heading', { name: 'Summary of your orders for' })).toBeVisible()
+      await expect(page.getByRole('heading', { name: ', you have ordered meals for' })).toBeVisible()
 
       await expect(page.getByText(mainForTestSecond.name)).toBeVisible()
     })

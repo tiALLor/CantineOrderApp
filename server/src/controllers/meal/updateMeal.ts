@@ -20,6 +20,14 @@ export default chefAuthProcedure
       input: { id, mealData },
       ctx: { repos },
     }): Promise<MealPublic> => {
+      if (
+        mealData.name &&
+        await repos.mealRepository.mealExists(mealData.name, id)) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'meal with this name already exists',
+        })
+      }
       const mealUpdated = await repos.mealRepository
         .updateMeal(id, mealData)
         .catch((error: unknown) => {

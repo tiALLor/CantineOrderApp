@@ -9,7 +9,7 @@ import { dateSchema } from '@server/entities/shared'
 export default authenticatedProcedure
   .use(provideRepos({ orderRepository }))
   .input(z.object({ dates: z.array(dateSchema) }))
-  .mutation(
+  .query(
     async ({
       input: dates,
       ctx: { repos, authUser },

@@ -9,11 +9,13 @@ defineProps<{
 </script>
 
 <template>
-  <FwbAlert v-if="showSuccess && successMessage" data-testid="successMessage" type="success">
-    {{ successMessage }}
-  </FwbAlert>
+  <div class="space-y-4">
+    <FwbAlert v-if="showSuccess && successMessage" data-testid="successMessage" type="success">
+      {{ successMessage }}
+    </FwbAlert>
 
-  <FwbAlert v-if="errorMessage" data-testid="errorMessage" type="danger">
-    {{ errorMessage }}
-  </FwbAlert>
+    <FwbAlert v-if="errorMessage" data-testid="errorMessage" type="danger">
+      {{ errorMessage }}
+    </FwbAlert>
+  </div>
 </template>

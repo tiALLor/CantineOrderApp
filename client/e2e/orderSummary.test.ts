@@ -25,6 +25,6 @@ test('user can place and change a order', async ({ page }) => {
     await summaryLink.click()
 
     await expect(page.locator('[data-test-id="dp-input"]')).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Summary of your orders for' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: ', you have ordered meals for' })).toBeVisible()
   })
 })

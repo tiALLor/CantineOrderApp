@@ -22,14 +22,34 @@ export function mealRepository(db: Database) {
       return meals
     },
 
-    async getAllMealsByType(type: string): Promise<MealPublic[] | []> {
-      const meals = await db
-        .selectFrom('meal')
-        .where('type', '=', type)
-        .select(mealKeyPublic)
-        .execute()
+    async getAllMealsByType(
+      type: string,
+      page?: number,
+      pageSize?: number
+    ): Promise<{ meals: MealPublic[]; totalPages: number }> {
+      // Base query for filtering by type
+      const baseQuery = db.selectFrom('meal').where('type', '=', type)
 
-      return meals
+      const { records: totalRecords } = await baseQuery
+        .select((eb) => [eb.fn.count<number>('meal.id').as('records')])
+        .executeTakeFirstOrThrow()
+
+      // if no records return early
+      if (totalRecords === 0) return { meals: [], totalPages: 1 }
+
+      const totalPages: number = pageSize
+        ? Math.ceil(totalRecords / pageSize)
+        : 1
+
+      let mealsQuery = baseQuery.select(mealKeyPublic).orderBy('meal.name')
+
+      if (page && pageSize) {
+        mealsQuery = mealsQuery.limit(pageSize).offset((page - 1) * pageSize)
+      }
+
+      const meals = await mealsQuery.execute()
+
+      return { meals, totalPages }
     },
 
     async getMealById(id: number): Promise<MealPublic | undefined> {
@@ -65,6 +85,25 @@ export function mealRepository(db: Database) {
         .where('id', '=', id)
         .returning(mealKeyPublic)
         .executeTakeFirst()
+    },
+
+    async mealExists(
+      mealName: string,
+      excludedMealId?: number
+    ): Promise<boolean> {
+      let query = db
+        .selectFrom('meal')
+        .where('meal.name', 'ilike', mealName)
+
+        .select('meal.id')
+        .limit(1)
+
+      if (excludedMealId) {
+        query = query.where('meal.id', '!=', excludedMealId)
+      }
+
+      const foundMeal = await query.execute()
+      return foundMeal.length > 0
     },
   }
 }

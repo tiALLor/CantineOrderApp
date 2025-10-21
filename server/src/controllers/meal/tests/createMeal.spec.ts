@@ -1,20 +1,20 @@
 import { createTestDatabase } from '@tests/utils/database'
 import { wrapInRollbacks } from '@tests/utils/transactions'
 import { createCallerFactory } from '@server/trpc'
-import { selectAll, insertAll } from '@tests/utils/records'
-import { fakeUser } from '@server/entities/tests/fakes'
+import { selectAll, insertAll, clearTables } from '@tests/utils/records'
+import { fakeMeal, fakeUser } from '@server/entities/tests/fakes'
 import { authContext } from '@tests/utils/context'
 import { authUserSchemaWithRoleName } from '@server/entities/user'
 import mealRouter from '@server/controllers/meal'
 import type { MealInsertable } from '@server/entities/meal'
 import type { AuthService } from '@server/services/authService'
 
-const db = await wrapInRollbacks(createTestDatabase())
+export const db = await wrapInRollbacks(createTestDatabase())
 const authService = {} as AuthService
-
 
 const createCaller = createCallerFactory(mealRouter)
 
+await clearTables(db, ['meal'])
 const [userOne] = await insertAll(db, 'user', [fakeUser({ roleId: 2 })])
 
 const { createMeal } = createCaller(
@@ -45,4 +45,46 @@ it('should create a meal', async () => {
   )
 
   expect(mealInDatabase).toEqual({ ...mealData, id: expect.any(Number) })
+})
+
+it('should throw a error if meal name already exist', async () => {
+  const [mealInDatabase] = await insertAll(db, 'meal', fakeMeal())
+
+  const mealData: MealInsertable = {
+    name: mealInDatabase.name,
+    priceEur: '90.2',
+    type: 'main',
+  }
+
+  await expect(createMeal(mealData)).rejects.toThrow(
+    /meal with this name already exists/i
+  )
+})
+
+it('should throw a error if meal name already exist with spaces', async () => {
+  const [mealInDatabase] = await insertAll(db, 'meal', fakeMeal())
+
+  const mealData: MealInsertable = {
+    name: ` ${mealInDatabase.name} `,
+    priceEur: '90.2',
+    type: 'main',
+  }
+
+  await expect(createMeal(mealData)).rejects.toThrow(
+    /meal with this name already exists/i
+  )
+})
+
+it('should throw a error if meal name already exist with UpperCase', async () => {
+  const [mealInDatabase] = await insertAll(db, 'meal', fakeMeal())
+
+  const mealData: MealInsertable = {
+    name: mealInDatabase.name.toUpperCase(),
+    priceEur: '90.2',
+    type: 'main',
+  }
+
+  await expect(createMeal(mealData)).rejects.toThrow(
+    /meal with this name already exists/i
+  )
 })

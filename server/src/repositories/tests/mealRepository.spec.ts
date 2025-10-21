@@ -4,7 +4,7 @@ import { wrapInRollbacks } from '@tests/utils/transactions'
 import { fakeMeal } from '@server/entities/tests/fakes'
 import { mealRepository } from '../mealRepository'
 
-const db = await wrapInRollbacks(createTestDatabase())
+export const db = await wrapInRollbacks(createTestDatabase())
 const repository = mealRepository(db)
 
 await db.deleteFrom('order').execute()
@@ -45,9 +45,29 @@ describe('getAllMeals', () => {
 
 describe('getAllMealsByType', () => {
   it('should get all meals in database with given type', async () => {
-    const meals = await repository.getAllMealsByType('main')
+    const { meals, totalPages } = await repository.getAllMealsByType(
+      'main',
+      1,
+      10
+    )
 
     expect(meals).toEqual(expect.arrayContaining([mealTwo]))
+    expect(totalPages).toEqual(1)
+  })
+
+  it('should get all meals in database with given type without pagination', async () => {
+    const { meals, totalPages } = await repository.getAllMealsByType('main')
+
+    expect(meals).toEqual(expect.arrayContaining([mealTwo]))
+    expect(totalPages).toEqual(1)
+  })
+
+  it('should get return { meals: [], totalPages: 1 } if no records', async () => {
+    await db.deleteFrom('meal').execute()
+    const { meals, totalPages } = await repository.getAllMealsByType('main')
+
+    expect(meals).toEqual([])
+    expect(totalPages).toEqual(1)
   })
 })
 
@@ -133,5 +153,57 @@ describe('deleteMealById', () => {
     const result = await repository.deleteMealById(99999)
 
     expect(result).toBeUndefined()
+  })
+})
+
+describe('mealExists', () => {
+  it('should find meal(return true) in the database', async () => {
+    const [mealInDatabase] = await insertAll(db, 'meal', fakeMeal())
+
+    const result = await repository.mealExists(mealInDatabase.name)
+
+    expect(result).toEqual(true)
+  })
+
+  it('should find meal(return true) in the database if uppercase', async () => {
+    const [mealInDatabase] = await insertAll(db, 'meal', fakeMeal())
+
+    const result = await repository.mealExists(
+      mealInDatabase.name.toUpperCase()
+    )
+
+    expect(result).toEqual(true)
+  })
+
+  it('should find meal(return true) in the database if excludedId do not match Id', async () => {
+    const [mealInDatabase] = await insertAll(db, 'meal', fakeMeal())
+
+    const result = await repository.mealExists(
+      mealInDatabase.name,
+      mealInDatabase.id + 1
+    )
+
+    expect(result).toEqual(true)
+  })
+
+  it('should return false if meal not in the database', async () => {
+    await insertAll(db, 'meal', fakeMeal())
+
+    const result = await repository.mealExists(
+      'meal Name to be used for new meal name'
+    )
+
+    expect(result).toEqual(false)
+  })
+
+  it('should return false if meal in the database and if excludedId match Id', async () => {
+    const [mealInDatabase] = await insertAll(db, 'meal', fakeMeal())
+
+    const result = await repository.mealExists(
+      mealInDatabase.name,
+      mealInDatabase.id
+    )
+
+    expect(result).toEqual(false)
   })
 })

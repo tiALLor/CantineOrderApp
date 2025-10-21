@@ -26,6 +26,8 @@ const hasSucceeded = ref(false)
 
 // function, which creates an error message ref and handles the try/catch block
 const [submitCreateUser, errorMessage] = useErrorMessage(async () => {
+  clearAlerts()
+
   await trpc.user.createUser.mutate({
     ...userForm.value,
     roleName: userForm.value.roleName as EntityRole,
@@ -33,6 +35,11 @@ const [submitCreateUser, errorMessage] = useErrorMessage(async () => {
 
   hasSucceeded.value = true
 })
+
+const clearAlerts = () => {
+  errorMessage.value = '' // Clears the error message
+  hasSucceeded.value = false // Hides the success message
+}
 </script>
 
 <template>

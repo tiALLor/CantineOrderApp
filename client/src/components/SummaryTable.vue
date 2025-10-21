@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { trpc } from '@/trpc'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, computed } from 'vue'
 import type { PriceEurSchema, OrderWithUserMeal } from '@server/shared/types'
+import { format } from 'date-fns'
 
 type monthData = {
   month: number
@@ -20,17 +21,17 @@ const ordersPerMonth = ref<OrderWithUserMeal[]>([])
 
 async function fetchSummaryAndOrders() {
   try {
-    userOrderSummary.value = await trpc.order.getMonthlyCosts.mutate({
+    userOrderSummary.value = await trpc.order.getMonthlyCosts.query({
       year: props.selectedMonth.year,
       month: props.selectedMonth.month + 1,
     })
 
-    let responseOrders = await trpc.order.getOrderByUserDates.mutate({
+    let responseOrders = await trpc.order.getOrderByUserDates.query({
       dates: getDatesInMonth(props.selectedMonth.year, props.selectedMonth.month + 1),
     })
-    ordersPerMonth.value = responseOrders.sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-    )
+    ordersPerMonth.value = responseOrders
+      .filter((order) => order.mainMealId || order.soupMealId)
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
   } catch (error) {
     console.log(error)
   }
@@ -48,6 +49,23 @@ function getDatesInMonth(year: number, month: number): Date[] {
   return dates
 }
 
+const formattedMonth = computed(() => {
+  // Create a date for the first day of the month for easy formatting
+  const dateForFormatting = new Date(props.selectedMonth.year, props.selectedMonth.month, 1)
+  return format(dateForFormatting, 'yyyy-MM')
+})
+
+const formattedTotalCost = computed(() => {
+  const cost = parseFloat(userOrderSummary.value.priceEur)
+
+  return new Intl.NumberFormat('de-DE', {
+    style: 'currency',
+    currency: 'EUR',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(cost)
+})
+
 watch(
   () => props.selectedMonth,
   () => {
@@ -63,51 +81,39 @@ onMounted(() => {
 <template>
   <div class="p-5">
     <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100">
-      Summary of your orders for {{ selectedMonth.year }}-{{
-        (selectedMonth.month + 1).toString().padStart(2, '0')
-      }},
-      <br />
-      you have ordered meals for {{ userOrderSummary.priceEur }} €
+      In {{ formattedMonth }}, you have ordered meals for {{ formattedTotalCost }} €
     </h2>
   </div>
-  <div
-    v-for="order in ordersPerMonth"
-    :key="order.id"
-    :data-testId="`row-${order.date}`"
-    class="max-h-[38vh] space-y-2 overflow-y-auto border p-3"
-  >
-    <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100">
-      {{ order.date }}
-    </h3>
-    <div class="text-m flex items-center p-2" :aria-label="`Soup`">Soup:</div>
+  <div class="max-h-[50vh] space-y-4 overflow-y-auto rounded-lg border p-5 shadow-inner">
     <div
-      class="flex flex-col items-start justify-between rounded-lg border border-gray-200 p-1.5 shadow-sm sm:flex-row sm:items-center"
+      v-for="order in ordersPerMonth"
+      :key="order.id"
+      :data-testId="`row-${order.date}`"
+      class="border-b pb-3 pt-3 first:pt-0 last:border-b-0"
     >
-      <!-- Meal Info: Name and Price -->
-      <div
-        class="flex w-full flex-col gap-1 sm:w-auto sm:flex-row sm:items-center sm:gap-4"
-        v-if="order.soupMealName"
-      >
-        <div class="text-lg font-medium text-gray-900">
-          {{ order.soupMealName }}
-        </div>
-        <div class="px-5 py-2 text-sm text-gray-500">{{ order.soupMealPrice }} €</div>
+      <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100">
+        {{ order.date }}
+      </h3>
+
+      <div class="mt-2 text-sm text-gray-600">
+        <span class="font-semibold">Soup: </span>
+        <span v-if="order.soupMealName">
+          {{ order.soupMealName }} ({{ order.soupMealPrice }} €)
+        </span>
+        <span v-else class="text-gray-400">— Not Ordered —</span>
+      </div>
+
+      <div class="mt-1 text-sm text-gray-600">
+        <span class="font-semibold">Main: </span>
+        <span v-if="order.mainMealName">
+          {{ order.mainMealName }} ({{ order.mainMealPrice }} €)
+        </span>
+        <span v-else class="text-gray-400">— Not Ordered —</span>
       </div>
     </div>
-    <div class="text-m flex items-center p-2" :aria-label="`Main`">Main:</div>
-    <div
-      class="flex flex-col items-start justify-between rounded-lg border border-gray-200 p-1.5 shadow-sm sm:flex-row sm:items-center"
-    >
-      <!-- Meal Info: Name and Price -->
-      <div
-        class="flex w-full flex-col gap-1 sm:w-auto sm:flex-row sm:items-center sm:gap-4"
-        v-if="order.mainMealName"
-      >
-        <div class="text-lg font-medium text-gray-900">
-          {{ order.mainMealName }}
-        </div>
-        <div class="px-5 py-2 text-sm text-gray-500">{{ order.mainMealPrice }} €</div>
-      </div>
+
+    <div v-if="ordersPerMonth.length === 0" class="py-10 text-center text-gray-500">
+      You have no orders for {{ formattedMonth }}.
     </div>
   </div>
 </template>

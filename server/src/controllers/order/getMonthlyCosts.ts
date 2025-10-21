@@ -10,7 +10,7 @@ import { assertError } from '@server/utils/errors'
 export default authenticatedProcedure
   .use(provideRepos({ orderRepository }))
   .input(orderSchemaGetByYearMonth)
-  .mutation(
+  .query(
     async ({
       input: monthData,
       ctx: { repos, authUser },

@@ -22,6 +22,8 @@ it('should create a user with role user', async () => {
     password: PASSWORD_CORRECT,
   })
 
+  console.log(userData)
+
   const result = await signup(userData)
 
   const [userInDatabase] = await selectAll(db, 'user', (eb) =>

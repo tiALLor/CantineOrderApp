@@ -47,10 +47,12 @@ test('user as chef can create and edit a menu', async ({ page }) => {
     await form.locator('#priceEUR').fill(String(soupForTestFirst.priceEur))
     await form.getByRole('button', { name: 'Add soup' }).click()
     // add Second soup
+    await page.getByRole('button', { name: 'Add soup' }).first().click()
+    await expect(page.getByText('Add soup').nth(1)).toBeVisible()
+
     await form.locator('#mealName').fill(soupForTestSecond.name)
     await form.locator('#priceEUR').fill(String(soupForTestSecond.priceEur))
     await form.getByRole('button', { name: 'Add soup' }).click()
-    await page.getByLabel('close').click()
 
     await page.locator('li').filter({ hasText: 'Soups' }).locator('div').click()
 
@@ -73,12 +75,7 @@ test('user as chef can create and edit a menu', async ({ page }) => {
     // Then (ASSERT)
     await page.locator('label').filter({ hasText: soupForTestFirst.name }).click()
 
-    await page.getByRole('button', { name: 'Add meal to menu' }).click()
-
-    const successMessage = page.getByTestId('successMessage')
-    await expect(successMessage).toBeVisible()
-
-    await page.getByLabel('close').click()
+    await page.getByRole('button', { name: 'Add soup to menu' }).click()
 
     await expect(page.getByTestId(`row-${soupForTestFirst.name}`)).toBeVisible()
 
@@ -86,9 +83,8 @@ test('user as chef can create and edit a menu', async ({ page }) => {
     await expect(page.locator('label').filter({ hasText: soupForTestFirst.name })).not.toBeVisible()
 
     await page.locator('label').filter({ hasText: soupForTestSecond.name }).click()
-    await page.getByRole('button', { name: 'Add meal to menu' }).click()
+    await page.getByRole('button', { name: 'Add soup to menu' }).click()
 
-    await page.getByLabel('close').click()
 
     await expect(page.getByTestId(`row-${soupForTestFirst.name}`)).toBeVisible()
     await expect(page.getByTestId(`row-${soupForTestSecond.name}`)).toBeVisible()
@@ -99,7 +95,6 @@ test('user as chef can create and edit a menu', async ({ page }) => {
       .getByRole('button', { name: 'remove' })
       .click()
 
-    await expect(successMessage).toBeVisible()
 
     await expect(page.getByTestId(`row-${soupForTestFirst.name}`)).not.toBeVisible()
 

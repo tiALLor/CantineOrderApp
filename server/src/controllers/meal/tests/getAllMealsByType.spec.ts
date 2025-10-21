@@ -1,7 +1,7 @@
 import { createTestDatabase } from '@tests/utils/database'
 import { wrapInRollbacks } from '@tests/utils/transactions'
 import { createCallerFactory } from '@server/trpc'
-import { insertAll } from '@tests/utils/records'
+import { insertAll, clearTables } from '@tests/utils/records'
 import { fakeMeal, fakeUser } from '@server/entities/tests/fakes'
 import { authContext } from '@tests/utils/context'
 import { authUserSchemaWithRoleName } from '@server/entities/user'
@@ -13,6 +13,8 @@ const db = await wrapInRollbacks(createTestDatabase())
 const authService = {} as AuthService
 
 const createCaller = createCallerFactory(mealRouter)
+
+clearTables(db, ['meal'])
 
 const [userOne] = await insertAll(db, 'user', [fakeUser({ roleId: 3 })])
 
@@ -28,10 +30,27 @@ const { getAllMealsByType } = createCaller(
   )
 )
 
+const page = 1
+const pageSize = 10
+
 it('should return a list of all meals with selected type', async () => {
-  const meals = await getAllMealsByType({ type: 'main' })
+  const { meals, totalPages } = await getAllMealsByType({
+    type: 'main',
+    page,
+    pageSize,
+  })
 
   // expect(meals).toHaveLength(1)
   expect(meals).toEqual(expect.arrayContaining([mealOne]))
   expect(meals).toEqual(expect.not.arrayContaining([mealTwo]))
+
+  expect(totalPages).toEqual(1)
+})
+
+it('should throw a error if page is provided but pageSize is missing', async () => {
+  await expect(getAllMealsByType({
+    type: 'main',
+    page,
+  })).rejects.toThrow(/pageSize/i)
+
 })

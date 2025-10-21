@@ -5,7 +5,7 @@ import { FwbListGroup, FwbListGroupItem, FwbRadio, FwbButton, FwbSpinner } from 
 import AlertMessages from '@/components/AlertMessages.vue'
 import useErrorMessage from '@/composables/useErrorMessage'
 import type { MenuWithMeal } from '@server/shared/types'
-import { format } from 'date-fns'
+import { dateAsString } from '@/utils/dates'
 
 const props = defineProps<{
   date: Date
@@ -21,26 +21,23 @@ const pickedMain = ref<string | undefined>()
 
 const loading = ref(false)
 
-const dateAsString = (date: Date): string => {
-  return format(date, 'yyyy-MM-dd')
-}
 const isEditDisabled = computed(() => (props.date > new Date() ? false : true))
 
 const fetchMealsAndOrders = async () => {
   loading.value = true
   try {
-    let responseSoup = await trpc.menu.getMenuByTypeDates.mutate({
+    let responseSoup = await trpc.menu.getMenuByTypeDates.query({
       type: 'soup',
       dates: [props.date],
     })
     soups.value = responseSoup[dateAsString(props.date)] ?? []
-    let responseMain = await trpc.menu.getMenuByTypeDates.mutate({
+    let responseMain = await trpc.menu.getMenuByTypeDates.query({
       type: 'main',
       dates: [props.date],
     })
     mains.value = responseMain[dateAsString(props.date)] ?? []
 
-    let responseOrder = await trpc.order.getOrderByUserDates.mutate({ dates: [props.date] })
+    let responseOrder = await trpc.order.getOrderByUserDates.query({ dates: [props.date] })
     let dayData = responseOrder.find((d) => dateAsString(d.date) === dateAsString(props.date))
     pickedSoup.value = dayData?.soupMealId?.toString() ?? 'none'
     pickedMain.value = dayData?.mainMealId?.toString() ?? 'none'
@@ -52,6 +49,8 @@ const fetchMealsAndOrders = async () => {
 }
 
 const [updateOrder, errorMessage] = useErrorMessage(async () => {
+  clearAlerts()
+
   hasSucceeded.value = false
   errorMessage.value = ''
   let submitData = {
@@ -78,6 +77,11 @@ watch(
 )
 
 const hasSucceeded = ref(false)
+
+const clearAlerts = () => {
+  errorMessage.value = '' // Clears the error message
+  hasSucceeded.value = false // Hides the success message
+}
 
 onMounted(() => {
   fetchMealsAndOrders()

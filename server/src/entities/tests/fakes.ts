@@ -12,7 +12,7 @@ const randomId = () =>
 export const fakeUser = <T extends Partial<Insertable<User>>>(
   overrides: T = {} as T
 ): Insertable<User> => ({
-  name: random.name(),
+  name: random.name({ middle: true }),
   email: random.email(),
   password: 'Random.password123',
   roleId: 3,

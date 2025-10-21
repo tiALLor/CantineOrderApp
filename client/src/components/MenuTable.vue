@@ -3,13 +3,15 @@ import { trpc } from '@/trpc'
 import { onMounted, ref, computed, watch } from 'vue'
 import { FwbButton, FwbAlert } from 'flowbite-vue'
 import type { MenuWithMeal, MealType } from '@server/shared/types'
-import { format } from 'date-fns'
+import { isPast, startOfDay } from 'date-fns'
 import AlertMessages from '@/components/AlertMessages.vue'
 import useErrorMessage from '@/composables/useErrorMessage'
 import MenuModalBody from '@/components/MenuModalBody.vue'
 import { useUserAuthStore } from '@/stores/userAuthStore'
+import { useMenuStore } from '@/stores/menuStore'
 
 const userAuthStore = useUserAuthStore()
+const menuCache = useMenuStore()
 
 const props = defineProps<{
   type: MealType
@@ -20,11 +22,7 @@ const mealsInMenu = ref<MenuWithMeal[]>([])
 
 const usedMealsIds = computed(() => (mealsInMenu.value ?? []).map((meal) => meal.mealId))
 
-const isEditDisabled = computed(() => (props.date > new Date() ? false : true))
-
-const dateAsString = (date: Date): string => {
-  return format(date, 'yyyy-MM-dd')
-}
+const isEditDisabled = computed(() => isPast(startOfDay(props.date)))
 
 watch(
   () => props.date,
@@ -44,18 +42,26 @@ function closeAddToMenuModal() {
 }
 
 async function fetchMenu() {
-  let data = await trpc.menu.getMenuByTypeDates.mutate({ type: props.type, dates: [props.date] })
-  mealsInMenu.value = data[dateAsString(props.date)]
+  mealsInMenu.value = await menuCache.getAllMenuByTypeDateFromStore(props.type, props.date)
 }
 
 const [removeMeal, errorMessage] = useErrorMessage(async (menuId) => {
+  clearAlerts()
+
   //TODO: add isUsed check input: date, mealID in Orders
   await trpc.menu.removeMenuMeal.mutate({ id: menuId })
-  fetchMenu()
   hasSucceeded.value = true
+  console.log('deleted meal from menu')
+  menuCache.invalidateCache(props.type)
+  fetchMenu()
 })
 
 const hasSucceeded = ref(false)
+
+const clearAlerts = () => {
+  errorMessage.value = '' // Clears the error message
+  hasSucceeded.value = false // Hides the success message
+}
 
 onMounted(fetchMenu)
 </script>

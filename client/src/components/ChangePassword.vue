@@ -24,6 +24,8 @@ const passwordMatch = computed(() => {
 
 // function, which creates an error message ref and handles the try/catch block
 const [changePassword, errorMessage] = useErrorMessage(async () => {
+  clearAlerts()
+  
   if (changePasswordForm.value.newPassword !== changePasswordForm.value.confirmNewPassword)
     throw new Error('New Password and Confirmed password need to match')
 
@@ -36,6 +38,11 @@ const [changePassword, errorMessage] = useErrorMessage(async () => {
   // optionally we can logout the user after password change
   // userAuthStore.logout()
 })
+
+const clearAlerts = () => {
+  errorMessage.value = '' // Clears the error message
+  hasSucceeded.value = false // Hides the success message
+}
 </script>
 
 <template>

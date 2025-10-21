@@ -29,6 +29,12 @@ watch(calendarMonth, (newMonthData) => {
 
 <template>
   <div class="mx-auto mt-1 max-w-xs">
-    <VueDatePicker v-model="calendarMonth" month-picker required />
+    <VueDatePicker
+      v-model="calendarMonth"
+      month-picker
+      required
+      :clearable="false"
+      :auto-apply="true"
+    />
   </div>
 </template>

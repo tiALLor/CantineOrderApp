@@ -4,12 +4,22 @@ import type { User } from '@server/database/types'
 import { ROLES } from './role'
 import { idSchema, passwordSchema } from './shared'
 
+const pattern = /^[a-zA-Z][a-zA-Z0-9 _. -]{2,49}$/
+
 // ===========================================
 // main schema
 // ===========================================
 export const userSchema = z.object({
   id: idSchema,
-  name: z.string().trim().min(1).max(50),
+  name: z
+    .string()
+    .trim()
+    .min(3, { message: 'Username must be at least 3 characters' })
+    .max(50, { message: 'Username must be at most 50 characters' })
+    .regex(pattern, {
+      message:
+        'Must start with a letter and contain only letters, numbers, spaces, underscores, dots, or hyphens',
+    }),
   email: z.string().toLowerCase().trim().email(),
   password: passwordSchema,
   roleId: z.number().positive().max(ROLES.length),
@@ -48,7 +58,7 @@ export type ChangePasswordInput = z.infer<typeof changePasswordSchema>
 // ===========================================
 // public
 // ===========================================
-export const userKeyPublic = ['id', 'name', ] as const
+export const userKeyPublic = ['id', 'name'] as const
 
 export type UserPublic = Pick<Selectable<User>, (typeof userKeyPublic)[number]>
 

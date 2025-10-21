@@ -26,7 +26,7 @@ export default authenticatedProcedure
 
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
-          message: 'User delete failed',
+          message: `User delete failed: ${error}`,
           cause: error,
         })
       }

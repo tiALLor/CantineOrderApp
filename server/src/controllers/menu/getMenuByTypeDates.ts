@@ -9,7 +9,7 @@ import {
 export default publicProcedure
   .use(provideRepos({ menuRepository }))
   .input(menuSchemaGetByTypeDates)
-  .mutation(
+  .query(
     async ({ input: menuData, ctx: { repos } }): Promise<GroupedMenus> => {
       const menus = await repos.menuRepository.getMenuByTypeByDate(menuData)
 

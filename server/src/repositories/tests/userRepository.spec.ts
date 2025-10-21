@@ -1,5 +1,5 @@
 import { createTestDatabase } from '@tests/utils/database'
-import { selectAll, insertAll } from '@tests/utils/records'
+import { selectAll, insertAll, clearTables } from '@tests/utils/records'
 import { wrapInRollbacks } from '@tests/utils/transactions'
 import { fakeUser } from '@server/entities/tests/fakes'
 import { userRepository } from '../userRepository'
@@ -7,13 +7,9 @@ import { userRepository } from '../userRepository'
 const db = await wrapInRollbacks(createTestDatabase())
 const repository = userRepository(db)
 
-beforeEach(async () => {
 
-  await db.deleteFrom('order').execute()
-  await db.deleteFrom('menu').execute()
-  await db.deleteFrom('meal').execute()
-  await db.deleteFrom('user').execute()
-})
+clearTables(db, ['order', 'menu', 'meal'])
+db.deleteFrom('user').execute()
 
 describe('create user', () => {
   it('should create user', async () => {
