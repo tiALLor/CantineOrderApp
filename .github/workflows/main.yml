@@ -194,7 +194,10 @@ jobs:
                 "TOKEN_KEY": "${{ secrets.PROD_TOKEN_KEY }}",
                 "ADMIN_EMAIL": "${{ secrets.PROD_ADMIN_EMAIL }}",
                 "INITIAL_ADMIN_PASSWORD": "${{ secrets.PROD_INITIAL_ADMIN_PASSWORD }}",
-                "EXPIRES_IN": "${{ vars.PROD_EXPIRES_IN }}"
+                "TOKEN_EXPIRES_IN": "${{ vars.PROD_TOKEN_EXPIRES_IN }}",
+                "REFRESH_TOKEN_EXPIRES_IN": "${{ vars.PROD_REFRESH_TOKEN_EXPIRES_IN }}",
+                "PASSWORD_COST": "${{ vars.PROD_PASSWORD_COST}}",
+                "PASSWORD_PEPPER": "${{ secrets.PROD_PASSWORD_PEPPER}}",
               }
             }
           }' > containers.json
