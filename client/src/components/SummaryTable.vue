@@ -81,7 +81,7 @@ onMounted(() => {
 <template>
   <div class="p-5">
     <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100">
-      In {{ formattedMonth }}, you have ordered meals for {{ formattedTotalCost }} €
+      In {{ formattedMonth }}, you have ordered meals for {{ formattedTotalCost }}
     </h2>
   </div>
   <div class="max-h-[50vh] space-y-4 overflow-y-auto rounded-lg border p-5 shadow-inner">

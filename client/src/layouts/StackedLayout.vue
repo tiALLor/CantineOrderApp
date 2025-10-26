@@ -27,6 +27,7 @@ const navigation = computed(() =>
         Cantina
       </fwb-navbar-logo>
     </template>
+
     <template #default="{ isShowMenu }">
       <FwbNavbar-collapse :isShowMenu="isShowMenu">
         <FwbNavbarLink

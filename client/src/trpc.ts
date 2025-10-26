@@ -10,7 +10,6 @@ export const trpc = createTRPCProxyClient<AppRouter>({
   links: [
     httpBatchLink({
       url: apiBase,
-      // credentials: 'include',
 
       // send the access token with every request
       headers: () => {
@@ -20,7 +19,7 @@ export const trpc = createTRPCProxyClient<AppRouter>({
         return accessToken ? { Authorization: `Bearer ${accessToken}` } : {}
       },
 
-      // Handle token refresh on 401
+      // implementation for usage of refresh tokens
       async fetch(url, options) {
         const parsedUrl = new URL(url.toString())
         const isRefreshCall = parsedUrl.pathname === '/api/v1/trpc/user.refreshToken'
@@ -30,13 +29,17 @@ export const trpc = createTRPCProxyClient<AppRouter>({
           ...options,
           credentials: 'include' as RequestCredentials,
         }
+
         const response = await fetch(url, requestOptions)
 
+        // try to refresh the token and repeat the call
         if (response.status === 401 && !isRefreshCall && !isLoginCall) {
           const userAuthStore = useUserAuthStore()
           try {
+            // try to refresh the tokens with separate call
             await userAuthStore.refreshToken()
 
+            // new options with refreshed accessToken
             const newOptions = {
               ...options,
               headers: {
@@ -49,7 +52,8 @@ export const trpc = createTRPCProxyClient<AppRouter>({
             userAuthStore.logout()
             window.location.href = '/login'
             // throw error
-            console.log(error)
+            console.error('Token refresh failed and user was logged out.', error)
+            throw new Error('Authentication failed. User was logged out.')
           }
         }
 
